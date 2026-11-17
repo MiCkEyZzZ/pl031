@@ -1,0 +1,2332 @@
+<!DOCTYPE HTML>
+<html lang="ru" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>ARM PrimeCell Real-Time Clock (PL031)</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Техническое руководство по контроллеру часов реального времени ARM PrimeCell PL031">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-0392ca55.css">
+        <link rel="stylesheet" href="css/chrome-fc474251.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/pl031-4bbb8088.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-c6d7c042.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-21f7edc0.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">ARM PrimeCell Real-Time Clock (PL031)</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="arm-primecell-real-time-clock-pl031"><a class="header" href="#arm-primecell-real-time-clock-pl031">ARM PrimeCell Real-Time Clock (PL031)</a></h1>
+<h2 id="техническое-руководство"><a class="header" href="#техническое-руководство">Техническое руководство</a></h2>
+<p>Контроллер часов реального времени ARM PrimeCell PL031 — это периферийное
+устройство на шине AMBA APB, которое ведёт счёт секунд в 32-битном счётчике
+и вырабатывает прерывание при совпадении показаний счётчика с программируемым
+значением.</p>
+<p>Эта книга — русскоязычное описание устройства, составленное по структуре
+официального технического руководства ARM <strong>DDI 0224B</strong> (ARM PrimeCell
+Real-Time Clock (PL031) Technical Reference Manual, 2001). Она не является
+официальным переводом ARM и не заменяет оригинальную документацию.</p>
+<h3 id="содержание-книги"><a class="header" href="#содержание-книги">Содержание книги</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Часть</th><th>О чём</th></tr>
+</thead>
+<tbody>
+<tr><td>Предисловие</td><td>Назначение, аудитория, соглашения, литература</td></tr>
+<tr><td>Глава 1</td><td>Назначение и возможности контроллера</td></tr>
+<tr><td>Глава 2</td><td>Функциональное описание: блоки, шина APB, сброс, тактирование</td></tr>
+<tr><td>Глава 3</td><td>Модель программиста: карта и описание всех регистров, прерывания</td></tr>
+<tr><td>Глава 4</td><td>Тестовая модель: интеграционная тестовая обвязка, scan-тестирование</td></tr>
+<tr><td>Приложение A</td><td>Описание сигналов: AMBA APB и внутрикристальные сигналы</td></tr>
+<tr><td>Приложение Б</td><td>Глоссарий</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="как-собрать"><a class="header" href="#как-собрать">Как собрать</a></h3>
+<pre><code class="language-console">$ mdbook build      # результат в ./book
+$ mdbook serve      # предпросмотр на http://localhost:3000
+</code></pre>
+<p>Книга собирается статически: <code>mdbook build</code> создаёт каталог <code>book/</code>, который
+можно открыть локально или опубликовать на любом статическом хостинге.</p>
+<h3 id="соглашение-об-обозначениях"><a class="header" href="#соглашение-об-обозначениях">Соглашение об обозначениях</a></h3>
+<p>Регистры записываются прописными буквами с префиксом <code>RTC</code> (<code>RTCDR</code>, <code>RTCMR</code>,
+<code>RTCIMSC</code> и т. д.). Смещения регистров указаны относительно базового адреса
+блока, который назначается при интеграции контроллера в систему на кристалле.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="о-документе"><a class="header" href="#о-документе">О документе</a></h1>
+<h2 id="назначение"><a class="header" href="#назначение">Назначение</a></h2>
+<p>Это руководство описывает контроллер часов реального времени (Real-Time Clock,
+RTC) ARM PrimeCell PL031: его структуру, программируемую модель, регистры
+и тестовую обвязку. Документ предназначен для разработчиков, которые
+интегрируют контроллер в систему на кристалле и пишут для него драйверы.</p>
+<h2 id="предмет-документа"><a class="header" href="#предмет-документа">Предмет документа</a></h2>
+<p>Контроллер PL031 — компонент семейства PrimeCell. Он подключается к шине
+AMBA APB как ведомое устройство и предоставляет процессору набор 32-битных
+регистров для чтения и установки времени, программирования будильника
+и управления прерыванием.</p>
+<p>Ключевые свойства, рассматриваемые в книге:</p>
+<ul>
+<li>32-битный счётчик, увеличивающийся на единицу с частотой 1 Гц;</li>
+<li>программируемая точка совпадения (будильник) с выходом прерывания;</li>
+<li>регистр загрузки для установки текущего значения счётчика;</li>
+<li>регистры идентификации PrimeCell, по которым программное обеспечение
+может распознать устройство;</li>
+<li>интеграционная тестовая обвязка, управляемая через APB.</li>
+</ul>
+<h2 id="организация-книги"><a class="header" href="#организация-книги">Организация книги</a></h2>
+<p>Материал повторяет структуру оригинального технического руководства ARM
+DDI 0224B и разбит на четыре главы и два приложения.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Раздел</th><th>Содержание</th></tr>
+</thead>
+<tbody>
+<tr><td>Глава 1</td><td>Краткое введение: что такое PL031 и какими возможностями обладает</td></tr>
+<tr><td>Глава 2</td><td>Функциональное описание: из каких блоков состоит контроллер, как они взаимодействуют, как выполняется сброс и тактирование</td></tr>
+<tr><td>Глава 3</td><td>Модель программиста: карта памяти, назначение битов и правила доступа ко всем регистрам, механизм прерываний</td></tr>
+<tr><td>Глава 4</td><td>Модель программиста для тестирования: тестовая обвязка, scan-тестирование, интеграционное тестирование входов и выходов</td></tr>
+<tr><td>Приложение A</td><td>Перечень и назначение сигналов контроллера</td></tr>
+<tr><td>Приложение Б</td><td>Глоссарий терминов</td></tr>
+</tbody>
+</table>
+</div>
+<p>Если вы впервые работаете с устройством, начните с главы 1, затем прочитайте
+раздел 2.1 и главу 3. Глава 4 нужна только тем, кто занимается
+производственным тестированием кристалла.</p>
+<h2 id="статус-документа"><a class="header" href="#статус-документа">Статус документа</a></h2>
+<p>Оригинал ARM DDI 0224B имеет статус <em>Non-Confidential</em> и описывает
+разработанный продукт; информация в нём окончательная. Ревизия B (октябрь
+2001 года) уточнила имя сигнала сброса (<code>nRtcRST</code> заменён на <code>nRTCRST</code>)
+и дополнила описание сброса интерфейса.</p>
+<p>Данная книга — самостоятельный русскоязычный текст, составленный по мотивам
+оригинала. Она не является публикацией ARM и не должна использоваться как
+юридически значимый источник.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="аудитория-и-организация"><a class="header" href="#аудитория-и-организация">Аудитория и организация</a></h1>
+<h2 id="для-кого-написано-руководство"><a class="header" href="#для-кого-написано-руководство">Для кого написано руководство</a></h2>
+<p>Документ рассчитан на три категории читателей.</p>
+<p><strong>Разработчики программного обеспечения.</strong> Им нужны главы 3 и 2.3: карта
+регистров, правила доступа, порядок обработки прерывания и поведение счётчика
+при загрузке нового значения.</p>
+<p><strong>Проектировщики интеграции (SoC).</strong> Им адресованы главы 2 и приложение A:
+описание блоков, требования к сбросу и тактированию, перечень сигналов
+и их назначение.</p>
+<p><strong>Инженеры тестирования.</strong> Для них предназначена глава 4: тестовая обвязка,
+позволяющая управлять входами блоков и наблюдать их выходы через APB,
+а также порядок проведения scan-тестирования.</p>
+<p>Предполагается, что читатель знаком с архитектурой AMBA APB и общими
+принципами работы периферийных устройств в системе на кристалле.</p>
+<h2 id="как-устроен-материал"><a class="header" href="#как-устроен-материал">Как устроен материал</a></h2>
+<p>Каждая глава начинается с краткого обзора и заканчивается перечислением
+рассмотренных вопросов. Описания регистров построены единообразно: сначала
+назначение регистра, затем таблица битовых полей, затем правила чтения
+и записи.</p>
+<p>Ссылки на разделы даны в виде «см. раздел 3.3.1». Номера таблиц и рисунков
+сквозные в пределах главы.</p>
+<h2 id="что-нужно-знать-заранее"><a class="header" href="#что-нужно-знать-заранее">Что нужно знать заранее</a></h2>
+<ul>
+<li><strong>AMBA APB.</strong> Контроллер является ведомым устройством APB; обмен идёт
+через сигналы <code>PSEL</code>, <code>PENABLE</code>, <code>PWRITE</code>, <code>PADDR</code>, <code>PWDATA</code>, <code>PRDATA</code>.</li>
+<li><strong>Система на кристалле.</strong> Базовый адрес блока, подключение прерывания
+<code>RTCINTR</code> и источник тактового сигнала 1 Гц определяются на этапе
+интеграции и в самом контроллере не заданы.</li>
+<li><strong>Асинхронные домены тактирования.</strong> Регистры APB тактируются <code>PCLK</code>,
+а счётчик — <code>CLK1HZ</code>. Пересечение доменов выполняет блок синхронизации.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="обозначения-и-соглашения"><a class="header" href="#обозначения-и-соглашения">Обозначения и соглашения</a></h1>
+<h2 id="типографика"><a class="header" href="#типографика">Типографика</a></h2>
+<p>В тексте используются следующие соглашения.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Оформление</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>моноширинный</code></td><td>Имена регистров, сигналов, полей, адреса и значения</td></tr>
+<tr><td><strong>Полужирный</strong></td><td>Названия элементов интерфейса и важные термины</td></tr>
+<tr><td><em>Курсив</em></td><td>Термины, определённые в глоссарии</td></tr>
+</tbody>
+</table>
+</div>
+<p>Числа записываются в шестнадцатеричном виде с префиксом <code>0x</code> (<code>0x1C</code>),
+в двоичном — с префиксом <code>0b</code> (<code>0b0001</code>). Отдельные биты обозначаются как
+<code>RTCCR[0]</code>, диапазоны — как <code>PADDR[11:2]</code>.</p>
+<h2 id="имена-сигналов"><a class="header" href="#имена-сигналов">Имена сигналов</a></h2>
+<p>Сигналы с активным низким уровнем имеют префикс <code>n</code>:</p>
+<ul>
+<li><code>PRESETn</code> — сброс шины, активен низким уровнем;</li>
+<li><code>nRTCRST</code> — сброс ядра RTC, активен низким уровнем;</li>
+<li><code>nPOR</code> — сброс по включению питания, активен низким уровнем.</li>
+</ul>
+<p>Сигнал без префикса считается активным высоким уровнем (<code>RTCINTR</code>).</p>
+<h2 id="типы-доступа-к-регистрам"><a class="header" href="#типы-доступа-к-регистрам">Типы доступа к регистрам</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Тип</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>RO</td><td>Read-only: только чтение, запись игнорируется</td></tr>
+<tr><td>WO</td><td>Write-only: только запись, чтение не определено</td></tr>
+<tr><td>RW</td><td>Read/write: чтение и запись</td></tr>
+<tr><td>—</td><td>Поле отсутствует</td></tr>
+<tr><td>DNM</td><td>Do Not Modify: зарезервировано, изменять нельзя</td></tr>
+</tbody>
+</table>
+</div>
+<p>Зарезервированные поля при записи должны сохранять значение, прочитанное
+из регистра. Если в описании указано «Read as zero», чтение возвращает нули.</p>
+<h2 id="сброс-и-значения-по-умолчанию"><a class="header" href="#сброс-и-значения-по-умолчанию">Сброс и значения по умолчанию</a></h2>
+<p>Если не указано иное, значение регистра после сброса равно <code>0x00000000</code>.
+Регистры <code>RTCMR</code> и регистры смещения не сбрасываются сигналом <code>PRESETn</code>:
+они сохраняют значение при сбросе шины и сбрасываются только сигналом
+<code>nPOR</code> (см. раздел 2.3.1).</p>
+<h2 id="диаграммы-времени"><a class="header" href="#диаграммы-времени">Диаграммы времени</a></h2>
+<p>На временных диаграммах приняты обозначения:</p>
+<ul>
+<li>сплошная линия — достоверный уровень сигнала;</li>
+<li>переход между уровнями — фронт сигнала;</li>
+<li>штриховая линия — момент, когда значение сигнала не важно;</li>
+<li>вертикальные линии отмечают границы тактов <code>PCLK</code>.</li>
+</ul>
+<p>Диаграммы показывают идеализированное поведение; фактические задержки
+зависят от реализации и технологии.</p>
+<h2 id="термины"><a class="header" href="#термины">Термины</a></h2>
+<p>Термины «ведущий» и «ведомый» относятся к ролям на шине: ведущий инициирует
+обмен, ведомый отвечает на запросы. Контроллер PL031 всегда является ведомым
+устройством APB.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="дополнительная-литература"><a class="header" href="#дополнительная-литература">Дополнительная литература</a></h1>
+<p>Для работы с контроллером полезны следующие документы и спецификации.</p>
+<h2 id="документы-arm"><a class="header" href="#документы-arm">Документы ARM</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Документ</th><th>О чём</th></tr>
+</thead>
+<tbody>
+<tr><td>ARM DDI 0224B</td><td>ARM PrimeCell Real-Time Clock (PL031) Technical Reference Manual — оригинал этой книги</td></tr>
+<tr><td>AMBA Specification (ARM IHI 0011)</td><td>Спецификация шины AMBA, включая протокол APB</td></tr>
+<tr><td>PrimeCell Specification</td><td>Общие требования к периферийным компонентам PrimeCell, включая регистры идентификации</td></tr>
+<tr><td>AMBA APB Protocol Specification</td><td>Детальное описание операций чтения и записи APB</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="стандарты-и-соглашения"><a class="header" href="#стандарты-и-соглашения">Стандарты и соглашения</a></h2>
+<ul>
+<li><strong>JEP106</strong> — соглашение о кодах производителей, используемое в регистрах
+идентификации периферии.</li>
+<li><strong>IEEE 1149.1 (JTAG)</strong> и <strong>IEEE 1500</strong> — стандарты тестирования цифровых
+блоков, на которые опирается глава 4.</li>
+</ul>
+<h2 id="программное-обеспечение"><a class="header" href="#программное-обеспечение">Программное обеспечение</a></h2>
+<p>Контроллер поддерживается открытым ПО, что удобно для проверки поведения
+при отсутствии документации под рукой:</p>
+<ul>
+<li>драйвер <code>drivers/rtc/rtc-pl031.c</code> в ядре Linux;</li>
+<li>модель <code>hw/rtc/pl031.c</code> в эмуляторе QEMU;</li>
+<li>описание привязки к дереву устройств (<code>arm,pl031</code>) в документации
+ядра Linux.</li>
+</ul>
+<p>Модель QEMU полезна тем, что показывает, как регистры ведут себя при
+обращениях, которые аппаратура не поддерживает: например, запись в регистр
+только для чтения игнорируется, а чтение регистра только для записи
+возвращает неопределённое значение.</p>
+<h2 id="что-читать-дальше"><a class="header" href="#что-читать-дальше">Что читать дальше</a></h2>
+<p>После знакомства с PL031 имеет смысл изучить:</p>
+<ul>
+<li>общий протокол APB — чтобы понимать временные диаграммы обмена;</li>
+<li>другие компоненты PrimeCell (контроллер прерываний, таймеры) — их
+регистровая модель устроена похоже;</li>
+<li>подсистему RTC ядра Linux — если предстоит писать или сопровождать драйвер.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="11-о-контроллере-primecell-rtc-pl031"><a class="header" href="#11-о-контроллере-primecell-rtc-pl031">1.1. О контроллере PrimeCell RTC (PL031)</a></h1>
+<h2 id="назначение-1"><a class="header" href="#назначение-1">Назначение</a></h2>
+<p>ARM PrimeCell Real-Time Clock (PL031) — периферийное устройство, которое
+отсчитывает время в секундах. Оно содержит 32-битный счётчик, увеличивающий
+своё значение на единицу при каждом импульсе тактового сигнала частотой
+1 Гц, и вырабатывает прерывание, когда значение счётчика совпадает
+с содержимым регистра совпадения.</p>
+<p>Контроллер подключается к системе на кристалле по шине AMBA APB в качестве
+ведомого устройства. Все обращения к нему выполняются 32-битными словами
+по адресам, смещения которых заданы в главе 3.</p>
+<p>Устройство не привязано к конкретному представлению даты и времени:
+счётчик хранит просто число секунд. Как это число соотносится с календарной
+датой (например, с количеством секунд, прошедших с 1 января 1970 года),
+решает программное обеспечение. Такое разделение позволяет использовать
+контроллер и как счётчик секунд, и как календарные часы.</p>
+<h2 id="место-в-системе"><a class="header" href="#место-в-системе">Место в системе</a></h2>
+<p>Типичное включение контроллера в систему на кристалле показано ниже.</p>
+<pre><code class="language-text">                    ┌───────────────────────────────┐
+   PCLK  ──────────▶│                               │
+   PRESETn ────────▶│                               │
+   nPOR   ─────────▶│   ARM PrimeCell RTC (PL031)   │──▶ RTCINTR
+   CLK1HZ ─────────▶│                               │
+   nRTCRST ────────▶│                               │
+                    └───────────────┬───────────────┘
+                                    │ AMBA APB (ведомый)
+                                    ▼
+                            ┌───────────────┐
+                            │  APB bridge   │
+                            └───────┬───────┘
+                                    │
+                            ┌───────▼───────┐
+                            │   Процессор   │
+                            └───────────────┘
+</code></pre>
+<p>Базовый адрес блока в адресном пространстве системы, номер линии прерывания
+и источник сигнала <code>CLK1HZ</code> определяются при интеграции. Сам контроллер
+их не задаёт.</p>
+<h2 id="особенности-контроллера"><a class="header" href="#особенности-контроллера">Особенности контроллера</a></h2>
+<h3 id="111-особенности"><a class="header" href="#111-особенности">1.1.1. Особенности</a></h3>
+<p>Контроллер обладает следующими свойствами.</p>
+<ul>
+<li><strong>32-битный счётчик секунд.</strong> Счётчик увеличивается на единицу с частотой
+1 Гц и переполняется по модулю 2³², то есть примерно раз в 136 лет.</li>
+<li><strong>Программируемое прерывание по совпадению.</strong> Когда значение счётчика
+становится равным значению регистра <code>RTCMR</code>, устанавливается флаг
+прерывания. Если прерывание разрешено, на выходе <code>RTCINTR</code> появляется
+сигнал запроса.</li>
+<li><strong>Установка времени.</strong> Запись в регистр <code>RTCLR</code> загружает счётчик новым
+значением, после чего счёт продолжается с этого значения.</li>
+<li><strong>Управление счётчиком.</strong> Бит <code>RTCEN</code> регистра <code>RTCCR</code> разрешает или
+запрещает инкремент счётчика.</li>
+<li><strong>Интерфейс AMBA APB.</strong> Обмен выполняется 32-битными словами; отдельные
+регистры занимают младшие биты слова.</li>
+<li><strong>Идентификация периферии.</strong> Регистры <code>RTCPeriphID0-3</code> и <code>RTCPCellID0-3</code>
+содержат постоянные значения, по которым программное обеспечение может
+убедиться, что обнаружен именно PL031.</li>
+<li><strong>Тестовая обвязка.</strong> Встроенная логика интеграционного тестирования
+позволяет управлять входами блоков и наблюдать их выходы через APB
+(см. главу 4).</li>
+</ul>
+<h2 id="что-рассматривается-дальше"><a class="header" href="#что-рассматривается-дальше">Что рассматривается дальше</a></h2>
+<p>В главе 2 описано внутреннее устройство контроллера: из каких блоков он
+состоит, как эти блоки связаны между собой, как выполняется сброс и как
+организовано тактирование. Глава 3 содержит полное описание регистровой
+модели — её следует читать вместе с этой главой.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="21-обзор"><a class="header" href="#21-обзор">2.1. Обзор</a></h1>
+<p>Контроллер PL031 состоит из нескольких функциональных блоков, связанных
+между собой двумя тактовыми доменами. Регистры, доступные по шине APB,
+тактируются сигналом <code>PCLK</code>, а счётчик секунд — сигналом <code>CLK1HZ</code>.
+Пересечение доменов выполняет блок синхронизации.</p>
+<p>Упрощённая структура контроллера показана на рисунке ниже.</p>
+<pre><code class="language-text">                  ┌──────────────────────────────────────────────┐
+                  │              PrimeCell RTC (PL031)           │
+                  │                                              │
+   AMBA APB ─────▶│  ┌────────────┐      ┌───────────────────┐   │
+   (PCLK)         │  │  Интерфейс │      │  Блок регистров   │   │
+                  │  │    APB     │─────▶│  (PCLK-домен)     │   │
+                  │  └────────────┘      └─────────┬─────────┘   │
+                  │                                │             │
+                  │                      ┌─────────▼─────────┐   │
+                  │                      │ Блок синхронизации│   │
+                  │                      └────┬─────────┬────┘   │
+                  │                           │         │        │
+                  │              ┌────────────▼──┐   ┌──▼─────┐  │
+   CLK1HZ ───────▶│              │ Блок счётчика │◀──│ Блок   │  │
+                  │              └───────┬───────┘   │ обнов- │  │
+                  │                      │           │ ления  │  │
+                  │              ┌───────▼───────┐   └──┬─────┘  │
+                  │              │Блок управления│      │        │
+                  │              └───────────────┘      │        │
+                  │                                     │        │
+                  │              ┌──────────────────────▼─────┐  │
+                  │              │ Тестовые регистры и логика │  │
+                  │              └────────────────────────────┘  │
+                  └───────────────────────────────┬──────────────┘
+                                                  │
+                                             RTCINTR
+</code></pre>
+<h2 id="состав-блоков"><a class="header" href="#состав-блоков">Состав блоков</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Блок</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td>Интерфейс AMBA APB</td><td>Приём и выполнение операций чтения и записи по шине APB</td></tr>
+<tr><td>Блок регистров</td><td>Хранение всех программно-доступных регистров</td></tr>
+<tr><td>Блок управления</td><td>Разрешение работы счётчика и общее управление</td></tr>
+<tr><td>Блок обновления</td><td>Обнаружение совпадения, установка флага прерывания, загрузка счётчика</td></tr>
+<tr><td>Блок синхронизации</td><td>Передача сигналов между доменами <code>PCLK</code> и <code>CLK1HZ</code></td></tr>
+<tr><td>Блок счётчика</td><td>32-битный счётчик секунд</td></tr>
+<tr><td>Тестовые регистры и логика</td><td>Интеграционная тестовая обвязка</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="два-домена-тактирования"><a class="header" href="#два-домена-тактирования">Два домена тактирования</a></h2>
+<p>Разделение на домены — важная особенность контроллера. Шина APB работает
+на частоте <code>PCLK</code>, которая обычно составляет десятки или сотни мегагерц,
+а счётчик продвигается на один шаг в секунду. Запись нового значения
+в регистр загрузки должна быть безопасно передана в медленный домен,
+а признак совпадения — обратно в быстрый, чтобы программное обеспечение
+увидело его при чтении регистра состояния.</p>
+<p>Именно поэтому все регистры, содержимое которых должно пересекать границу
+доменов (<code>RTCLR</code>, <code>RTCMR</code>, <code>RTCCR</code>, <code>RTCIMSC</code>), проходят через блок
+синхронизации, а не читаются и не пишутся напрямую из домена <code>PCLK</code>.</p>
+<h2 id="что-важно-для-интегратора"><a class="header" href="#что-важно-для-интегратора">Что важно для интегратора</a></h2>
+<ul>
+<li>Сигнал <code>CLK1HZ</code> должен быть стабильным: именно его фронт увеличивает
+счётчик.</li>
+<li>Регистр совпадения <code>RTCMR</code> сохраняет значение при сбросе шины <code>PRESETn</code>
+и сбрасывается только сигналом <code>nPOR</code>.</li>
+<li>Выход <code>RTCINTR</code> — единственный функциональный выход контроллера; он
+подключается к контроллеру прерываний системы.</li>
+</ul>
+<p>Детальное описание каждого блока приведено в разделе 2.2, а порядок работы
+контроллера — в разделе 2.3.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="22-функциональное-описание"><a class="header" href="#22-функциональное-описание">2.2. Функциональное описание</a></h1>
+<p>Контроллер выполняет одну задачу: вести счёт секунд и сообщать о совпадении
+счётчика с заданным значением. Вся функциональность раскладывается на семь
+частей, описанных в следующих разделах:</p>
+<ol>
+<li><a href="#221-интерфейс-amba-apb">Интерфейс AMBA APB</a> — как контроллер общается с шиной.</li>
+<li><a href="#222-блок-регистров">Блок регистров</a> — где хранятся программно-доступные
+значения.</li>
+<li><a href="#223-блок-управления">Блок управления</a> — что разрешает и запрещает работу
+счётчика.</li>
+<li><a href="#224-блок-обновления">Блок обновления</a> — как формируется прерывание
+и как загружается новое значение.</li>
+<li><a href="#225-блок-синхронизации">Блок синхронизации</a> — как сигналы
+переходят между тактовыми доменами.</li>
+<li><a href="#226-блок-счётчика">Блок счётчика</a> — сам счётчик секунд.</li>
+<li><a href="#227-тестовые-регистры-и-логика">Тестовые регистры и логика</a> — интеграционная
+тестовая обвязка.</li>
+</ol>
+<h2 id="путь-данных"><a class="header" href="#путь-данных">Путь данных</a></h2>
+<p>При записи по шине APB значение попадает в интерфейс APB, затем в блок
+регистров. Для регистров, влияющих на счётчик, значение проходит через блок
+синхронизации и только после этого применяется в домене <code>CLK1HZ</code>.</p>
+<p>При чтении всё происходит в обратном порядке: текущее значение счётчика
+передаётся из домена <code>CLK1HZ</code> в домен <code>PCLK</code>, фиксируется в блоке регистров
+и выдаётся на шину через интерфейс APB.</p>
+<h2 id="путь-прерывания"><a class="header" href="#путь-прерывания">Путь прерывания</a></h2>
+<p>Счётчик сравнивается со значением регистра совпадения в блоке обновления.
+При равенстве устанавливается внутренний флаг. Этот флаг проходит через
+блок синхронизации, маскируется в соответствии с регистром <code>RTCIMSC</code>
+и только затем попадает на выход <code>RTCINTR</code>.</p>
+<p>Такая организация означает, что между моментом совпадения и появлением
+сигнала на выходе проходит несколько тактов <code>PCLK</code>. Программное обеспечение
+не должно рассчитывать на мгновенную реакцию — задержка составляет единицы
+тактов и на практике незаметна.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="221-интерфейс-amba-apb"><a class="header" href="#221-интерфейс-amba-apb">2.2.1. Интерфейс AMBA APB</a></h1>
+<p>Контроллер подключён к шине AMBA APB как ведомое устройство. Обмен всегда
+инициирует ведущий — обычно мост APB, соединяющий быструю шину системы
+с медленной периферией.</p>
+<h2 id="сигналы-обмена"><a class="header" href="#сигналы-обмена">Сигналы обмена</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Сигнал</th><th>Направление</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PCLK</code></td><td>вход</td><td>Тактовый сигнал шины</td></tr>
+<tr><td><code>PRESETn</code></td><td>вход</td><td>Сброс шины, активен низким уровнем</td></tr>
+<tr><td><code>PSEL</code></td><td>вход</td><td>Выбор устройства</td></tr>
+<tr><td><code>PENABLE</code></td><td>вход</td><td>Разрешение передачи</td></tr>
+<tr><td><code>PWRITE</code></td><td>вход</td><td>1 — запись, 0 — чтение</td></tr>
+<tr><td><code>PADDR[11:2]</code></td><td>вход</td><td>Адрес слова внутри блока</td></tr>
+<tr><td><code>PWDATA[31:0]</code></td><td>вход</td><td>Данные для записи</td></tr>
+<tr><td><code>PRDATA[31:0]</code></td><td>выход</td><td>Данные при чтении</td></tr>
+</tbody>
+</table>
+</div>
+<p>Адрес передаётся битами <code>PADDR[11:2]</code>: младшие два бита отбрасываются,
+поскольку все регистры выровнены по границе 32-битного слова. Двенадцать
+бит адреса покрывают пространство 4 КБ — этого достаточно для регистров
+общих, идентификационных и тестовых.</p>
+<h2 id="цикл-записи"><a class="header" href="#цикл-записи">Цикл записи</a></h2>
+<p>Активная фаза передачи начинается, когда ведущий одновременно выставляет
+<code>PSEL</code> и <code>PENABLE</code> при <code>PWRITE = 1</code>. В этот момент контроллер принимает
+данные <code>PWDATA</code> и адрес <code>PADDR</code> и выполняет запись в соответствующий регистр.
+Данные фиксируются по фронту <code>PCLK</code>.</p>
+<pre><code class="language-text">            ┌──┐  ┌──┐  ┌──┐  ┌──┐
+PCLK     ───┘  └──┘  └──┘  └──┘  └───
+         ┌──────────────────────────┐
+PSEL     ┘                          └──
+         ┌──────────────────────────┐
+PENABLE  ┘                          └──
+         ┌──────────────────────────┐
+PWRITE   ┘                          └──
+         ┌──────────────────────────┐
+PADDR    ┘      адрес регистра      └──
+         ┌──────────────────────────┐
+PWDATA   ┘      данные для записи   └──
+                    ▲
+                    └── запись происходит здесь
+</code></pre>
+<h2 id="цикл-чтения"><a class="header" href="#цикл-чтения">Цикл чтения</a></h2>
+<p>При чтении (<code>PWRITE = 0</code>) контроллер выставляет значение регистра
+на <code>PRDATA</code>. Данные действительны в конце активной фазы передачи и снимаются
+после деактивации <code>PENABLE</code> или <code>PSEL</code>.</p>
+<pre><code class="language-text">            ┌──┐  ┌──┐  ┌──┐  ┌──┐
+PCLK     ───┘  └──┘  └──┘  └──┘  └───
+         ┌──────────────────────────┐
+PSEL     ┘                          └──
+         ┌──────────────────────────┐
+PENABLE  ┘                          └──
+         ┌──────────────────────────┐
+PRDATA   ─────────┤ значение ├──────
+                          ▲
+                          └── данные действительны здесь
+</code></pre>
+<h2 id="особенности-интерфейса"><a class="header" href="#особенности-интерфейса">Особенности интерфейса</a></h2>
+<ul>
+<li>Все регистры доступны только 32-битными словами. Обращения полусловами
+и байтами не поддерживаются.</li>
+<li>Запись в регистр только для чтения игнорируется; чтение регистра только
+для записи возвращает неопределённое значение.</li>
+<li>Тестовые регистры (смещения <code>0x80</code>–<code>0x90</code>) доступны по той же шине, что
+и обычные, но не должны использоваться в штатном режиме работы.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="222-блок-регистров"><a class="header" href="#222-блок-регистров">2.2.2. Блок регистров</a></h1>
+<p>Блок регистров содержит все программно-доступные регистры контроллера.
+Именно с ним работает интерфейс APB: любое обращение по шине адресуется
+одному из регистров этого блока.</p>
+<h2 id="состав"><a class="header" href="#состав">Состав</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Группа</th><th>Регистры</th><th>Смещения</th></tr>
+</thead>
+<tbody>
+<tr><td>Общие</td><td><code>RTCDR</code>, <code>RTCMR</code>, <code>RTCLR</code>, <code>RTCCR</code>, <code>RTCIMSC</code>, <code>RTCRIS</code>, <code>RTCMIS</code>, <code>RTCICR</code></td><td><code>0x000</code>–<code>0x01C</code></td></tr>
+<tr><td>Идентификация периферии</td><td><code>RTCPeriphID0</code>–<code>RTCPeriphID3</code></td><td><code>0xFE0</code>–<code>0xFEC</code></td></tr>
+<tr><td>Идентификация PrimeCell</td><td><code>RTCPCellID0</code>–<code>RTCPCellID3</code></td><td><code>0xFF0</code>–<code>0xFFC</code></td></tr>
+<tr><td>Тестовые</td><td><code>RTCITCR</code>, <code>RTCITIP</code>, <code>RTCITOP</code>, <code>RTCTOFFSET</code>, <code>RTCTCOUNT</code></td><td><code>0x080</code>–<code>0x090</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Полное описание регистров приведено в главе 3.</p>
+<h2 id="требования-к-сохранению-значений"><a class="header" href="#требования-к-сохранению-значений">Требования к сохранению значений</a></h2>
+<p>Не все регистры ведут себя одинаково при сбросе.</p>
+<ul>
+<li>Регистры <code>RTCPeriphID0-3</code> и <code>RTCPCellID0-3</code> жёстко заданы и не меняются.</li>
+<li>Регистры <code>RTCMR</code>, <code>RTCTOFFSET</code> и <code>RTCTCOUNT</code> должны сохранять значение
+при сбросе шины <code>PRESETn</code>. Они сбрасываются только сигналом <code>nPOR</code>,
+который приходит от схемы сброса по включению питания. Это позволяет
+сохранить настройку будильника при перезапуске шины.</li>
+<li>Остальные регистры сбрасываются сигналом <code>PRESETn</code>.</li>
+</ul>
+<h2 id="доступ-из-двух-доменов"><a class="header" href="#доступ-из-двух-доменов">Доступ из двух доменов</a></h2>
+<p>Регистры <code>RTCLR</code>, <code>RTCMR</code>, <code>RTCCR</code> и <code>RTCIMSC</code> должны быть видимы как
+в домене <code>PCLK</code>, так и в домене <code>CLK1HZ</code>. Поэтому их значения проходят
+через блок синхронизации, а не подаются в счётчик напрямую. Регистры
+состояния (<code>RTCRIS</code>, <code>RTCMIS</code>) формируются в домене <code>CLK1HZ</code> и передаются
+в домен <code>PCLK</code> также через синхронизатор.</p>
+<h2 id="зарезервированные-адреса"><a class="header" href="#зарезервированные-адреса">Зарезервированные адреса</a></h2>
+<p>Обращения по адресам, не занятым регистрами, не приводят к записи данных
+и возвращают неопределённое значение при чтении. Программное обеспечение
+не должно обращаться к зарезервированным областям.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="223-блок-управления"><a class="header" href="#223-блок-управления">2.2.3. Блок управления</a></h1>
+<p>Блок управления определяет, продвигается ли счётчик. Его единственный
+программно-доступный орган управления — бит <code>RTCEN</code> в регистре <code>RTCCR</code>.</p>
+<h2 id="принцип-работы"><a class="header" href="#принцип-работы">Принцип работы</a></h2>
+<p>Блок формирует внутренний сигнал разрешения счёта. Пока сигнал активен,
+каждый фронт <code>CLK1HZ</code> увеличивает счётчик на единицу. Когда сигнал снят,
+счётчик сохраняет текущее значение, а все остальные функции — чтение
+регистра данных, сравнение с регистром совпадения, прерывания — продолжают
+работать.</p>
+<p>Это важное свойство: остановка счётчика не отключает прерывание. Если
+счётчик остановлен в момент, когда его значение уже равно значению
+<code>RTCMR</code>, флаг прерывания останется установленным до явного сброса через
+<code>RTCICR</code>.</p>
+<h2 id="значение-после-сброса"><a class="header" href="#значение-после-сброса">Значение после сброса</a></h2>
+<p>После сброса <code>RTCEN = 0</code>: счётчик остановлен. Программное обеспечение должно
+явно установить бит <code>RTCEN</code>, чтобы начать отсчёт времени. Такое поведение
+защищает от неконтролируемого изменения счётчика до того, как программное
+обеспечение загрузит корректное начальное значение.</p>
+<h2 id="типичная-последовательность-запуска"><a class="header" href="#типичная-последовательность-запуска">Типичная последовательность запуска</a></h2>
+<ol>
+<li>Записать начальное значение времени в <code>RTCLR</code> — счётчик загрузится
+этим значением.</li>
+<li>При необходимости записать значение будильника в <code>RTCMR</code>.</li>
+<li>Разрешить прерывание, установив бит <code>RTCIMSC[0] = 1</code>.</li>
+<li>Установить <code>RTCCR[0] = 1</code>, чтобы разрешить счёт.</li>
+</ol>
+<p>Порядок шагов 1 и 4 может быть изменён: загрузка значения в <code>RTCLR</code>
+не требует, чтобы счётчик был разрешён.</p>
+<h2 id="взаимодействие-с-блоком-обновления"><a class="header" href="#взаимодействие-с-блоком-обновления">Взаимодействие с блоком обновления</a></h2>
+<p>Блок управления не участвует в сравнении значений и не формирует флаг
+прерывания — это задачи блока обновления. Разделение обязанностей позволяет
+независимо управлять темпом счёта и обработкой совпадений.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="224-блок-обновления"><a class="header" href="#224-блок-обновления">2.2.4. Блок обновления</a></h1>
+<p>Блок обновления отвечает за две операции: обнаружение совпадения значения
+счётчика со значением регистра <code>RTCMR</code> и загрузку нового значения счётчика
+из регистра <code>RTCLR</code>.</p>
+<h2 id="обнаружение-совпадения"><a class="header" href="#обнаружение-совпадения">Обнаружение совпадения</a></h2>
+<p>На каждом шаге счёта текущее значение счётчика сравнивается с содержимым
+<code>RTCMR</code>. Если значения равны, устанавливается бит <code>RTCRIS[0]</code> — сырой флаг
+прерывания.</p>
+<p>Флаг остаётся установленным до тех пор, пока программное обеспечение
+не запишет единицу в <code>RTCICR[0]</code>. Повторное совпадение может произойти
+только после полного оборота счётчика (2³² шагов), поэтому одного сброса
+флага достаточно, чтобы снять запрос.</p>
+<h2 id="загрузка-значения"><a class="header" href="#загрузка-значения">Загрузка значения</a></h2>
+<p>Запись в <code>RTCLR</code> передаёт новое значение в блок обновления. В ближайший
+такт <code>CLK1HZ</code> счётчик принимает это значение, и дальнейший счёт продолжается
+с него.</p>
+<p>Загрузка не влияет на флаг прерывания напрямую, но может изменить результат
+сравнения: если новое значение равно <code>RTCMR</code>, совпадение будет обнаружено
+на следующем шаге счёта и флаг установится.</p>
+<h2 id="маскирование"><a class="header" href="#маскирование">Маскирование</a></h2>
+<p>Блок обновления формирует только «сырой» флаг. Маскирование выполняет
+отдельная логика: значение <code>RTCRIS</code> логически умножается на <code>RTCIMSC</code>,
+результат записывается в <code>RTCMIS</code> и подаётся на выход <code>RTCINTR</code>.</p>
+<pre><code class="language-text">   счётчик ──┐
+             ├──[ = ]──▶ RTCRIS[0] ──┐
+   RTCMR  ───┘                       ├──[ AND ]──▶ RTCMIS[0] ──▶ RTCINTR
+                        RTCIMSC[0] ──┘
+</code></pre>
+<h2 id="замечание-о-задержке"><a class="header" href="#замечание-о-задержке">Замечание о задержке</a></h2>
+<p>Путь от совпадения до выхода <code>RTCINTR</code> проходит через синхронизатор доменов,
+поэтому сигнал появляется через несколько тактов <code>PCLK</code>. Это не влияет
+на корректность: флаг в регистре <code>RTCRIS</code> устанавливается независимо
+от синхронизации и не теряется.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="225-блок-синхронизации"><a class="header" href="#225-блок-синхронизации">2.2.5. Блок синхронизации</a></h1>
+<p>Контроллер работает в двух тактовых доменах: <code>PCLK</code> (шина APB) и <code>CLK1HZ</code>
+(счётчик). Сигналы, которые пересекают границу между доменами, должны быть
+синхронизированы — иначе возможны метастабильные состояния и потерянные
+события. Эту задачу решает блок синхронизации.</p>
+<h2 id="что-пересекает-границу"><a class="header" href="#что-пересекает-границу">Что пересекает границу</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Направление</th><th>Сигналы</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PCLK</code> → <code>CLK1HZ</code></td><td>Значение <code>RTCLR</code>, значение <code>RTCMR</code>, бит <code>RTCCR[0]</code>, бит <code>RTCIMSC[0]</code>, сигнал сброса <code>nRTCRST</code></td></tr>
+<tr><td><code>CLK1HZ</code> → <code>PCLK</code></td><td>Текущее значение счётчика, флаг <code>RTCRIS[0]</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="многоразрядные-значения"><a class="header" href="#многоразрядные-значения">Многоразрядные значения</a></h2>
+<p>Значение счётчика и значения регистров состоят из 32 бит. Простая
+синхронизация каждого бита по отдельности привела бы к тому, что в домене
+приёмника на короткое время возникло бы недопустимое сочетание битов —
+например, значение, которое никогда не существовало.</p>
+<p>Поэтому многоразрядные величины передаются через схему, которая фиксирует
+всё слово целиком по одному стробирующему сигналу. Пока идёт передача,
+в домене-приёмнике сохраняется предыдущее значение.</p>
+<h2 id="сброс"><a class="header" href="#сброс">Сброс</a></h2>
+<p>Сигнал <code>nRTCRST</code> может быть подан асинхронно, но сниматься должен
+синхронно с <code>CLK1HZ</code> (см. раздел 2.3.1). Это гарантирует, что все элементы
+домена <code>CLK1HZ</code> выйдут из сброса одновременно, в одном такте, и счётчик
+не начнёт счёт с произвольного значения.</p>
+<h2 id="практическое-следствие"><a class="header" href="#практическое-следствие">Практическое следствие</a></h2>
+<p>Запись в <code>RTCLR</code> и <code>RTCMR</code> может вступить в силу не мгновенно, а через
+один-два такта <code>CLK1HZ</code>. При частоте 1 Гц это означает задержку до секунды
+между записью и фактическим применением значения. Программное обеспечение,
+которому нужно точное время, должно учитывать эту задержку: например,
+загружать значение с поправкой или дожидаться подтверждения через чтение
+регистра данных.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="226-блок-счётчика"><a class="header" href="#226-блок-счётчика">2.2.6. Блок счётчика</a></h1>
+<p>Счётчик — центральный элемент контроллера. Он представляет собой 32-битный
+регистр, который увеличивается на единицу по каждому фронту сигнала
+<code>CLK1HZ</code>, если счёт разрешён.</p>
+<h2 id="разрядность-и-переполнение"><a class="header" href="#разрядность-и-переполнение">Разрядность и переполнение</a></h2>
+<p>Счётчик хранит значение от <code>0x00000000</code> до <code>0xFFFFFFFF</code>. При достижении
+максимума следующий шаг переводит его в ноль — переполнение происходит
+естественным образом, без отдельного флага.</p>
+<p>При частоте 1 Гц полный оборот счётчика занимает</p>
+<pre><code class="language-text">2^32 секунд ≈ 4 294 967 296 с ≈ 136,1 года
+</code></pre>
+<p>Такого диапазона достаточно для абсолютного времени в секундах, отсчитанного
+от произвольной эпохи.</p>
+<h2 id="чтение"><a class="header" href="#чтение">Чтение</a></h2>
+<p>Текущее значение доступно через регистр <code>RTCDR</code>. Чтение возвращает значение,
+зафиксированное на момент обращения. Поскольку счётчик принадлежит домену
+<code>CLK1HZ</code>, а шина — домену <code>PCLK</code>, значение проходит через блок
+синхронизации, и прочитанное число может отставать от реального на несколько
+тактов.</p>
+<p>Для практических задач это отставание несущественно: оно измеряется
+наносекундами при типичных частотах <code>PCLK</code>.</p>
+<h2 id="загрузка"><a class="header" href="#загрузка">Загрузка</a></h2>
+<p>Запись в <code>RTCLR</code> заменяет текущее значение счётчика. Счёт после загрузки
+продолжается с нового значения; счётчик не останавливается и не начинает
+отсчёт заново с нуля.</p>
+<p>Загрузку удобно использовать для установки календарного времени: программное
+обеспечение вычисляет количество секунд от выбранной эпохи и записывает
+его в <code>RTCLR</code>.</p>
+<h2 id="остановка"><a class="header" href="#остановка">Остановка</a></h2>
+<p>Если бит <code>RTCCR[0]</code> равен нулю, счётчик не изменяется. При этом чтение
+<code>RTCDR</code> возвращает последнее значение, а сравнение с <code>RTCMR</code> продолжает
+выполняться. Это позволяет использовать контроллер как «замороженные»
+часы, например при отладке.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="227-тестовые-регистры-и-логика"><a class="header" href="#227-тестовые-регистры-и-логика">2.2.7. Тестовые регистры и логика</a></h1>
+<p>Для производственного и интеграционного тестирования контроллер содержит
+дополнительную логику, доступную через те же регистры APB. Она позволяет
+подставлять значения на внутренние входы блоков и наблюдать их выходы,
+не имея доступа к внутренним цепям кристалла.</p>
+<h2 id="состав-1"><a class="header" href="#состав-1">Состав</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Регистр</th><th>Смещение</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RTCITCR</code></td><td><code>0x80</code></td><td>Управление интеграционным тестом</td></tr>
+<tr><td><code>RTCITIP</code></td><td><code>0x84</code></td><td>Чтение или установка входов</td></tr>
+<tr><td><code>RTCITOP</code></td><td><code>0x88</code></td><td>Чтение или установка выходов</td></tr>
+<tr><td><code>RTCTOFFSET</code></td><td><code>0x8C</code></td><td>Тестовое смещение</td></tr>
+<tr><td><code>RTCTCOUNT</code></td><td><code>0x90</code></td><td>Тестовое значение счётчика</td></tr>
+</tbody>
+</table>
+</div>
+<p>Подробное описание каждого регистра и порядок тестирования приведены
+в главе 4.</p>
+<h2 id="предупреждение"><a class="header" href="#предупреждение">Предупреждение</a></h2>
+<p>Тестовые регистры предназначены исключительно для тестирования. Обращаться
+к ним во время штатной работы нельзя: запись в них нарушает нормальное
+функционирование счётчика и прерываний.</p>
+<h2 id="связь-с-scan-тестированием"><a class="header" href="#связь-с-scan-тестированием">Связь с scan-тестированием</a></h2>
+<p>Помимо программно-управляемой тестовой обвязки, в контроллере предусмотрены
+выводы для scan-тестирования: <code>SCANENABLE</code>, <code>SCANINPCLK</code>, <code>SCANOUTPCLK</code>,
+<code>SCANINCLK1HZ</code>, <code>SCANOUTCLK1HZ</code>. Эти сигналы разделены по тактовым доменам,
+что упрощает вставку scan-цепочек и применение автоматической генерации
+тестовых воздействий (ATPG).</p>
+<p>В текущей ревизии блока эти выводы являются зарезервированными (place
+holder): они предусмотрены структурой контроллера, но не описаны как
+функциональные. Подробнее — в разделе 4.2.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="23-работа-контроллера"><a class="header" href="#23-работа-контроллера">2.3. Работа контроллера</a></h1>
+<p>В этом разделе описано поведение контроллера при сбросе, требования
+к тактированию и последовательность работы в штатном режиме.</p>
+<h2 id="231-сброс-интерфейса"><a class="header" href="#231-сброс-интерфейса">2.3.1. Сброс интерфейса</a></h2>
+<p>Контроллер имеет три сигнала сброса, каждый из которых отвечает за свою
+часть устройства.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Сигнал</th><th>Что сбрасывает</th><th>Уровень</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PRESETn</code></td><td>Интерфейс APB и большинство регистров</td><td>Активен низким</td></tr>
+<tr><td><code>nRTCRST</code></td><td>Ядро RTC: счётчик и связанную логику</td><td>Активен низким</td></tr>
+<tr><td><code>nPOR</code></td><td>Регистры <code>RTCMR</code>, <code>RTCTOFFSET</code>, <code>RTCTCOUNT</code></td><td>Активен низким</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="сброс-шины-presetn"><a class="header" href="#сброс-шины-presetn">Сброс шины PRESETn</a></h3>
+<p>Сигнал <code>PRESETn</code> приходит от контроллера сброса системы и сбрасывает
+интерфейс APB. После снятия <code>PRESETn</code> контроллер готов принимать обращения
+по шине.</p>
+<p>Важно: <code>PRESETn</code> <strong>не сбрасывает</strong> регистр совпадения <code>RTCMR</code> и тестовые
+регистры смещения. Это сделано намеренно — при перезапуске шины настройка
+будильника сохраняется.</p>
+<h3 id="сброс-ядра-nrtcrst"><a class="header" href="#сброс-ядра-nrtcrst">Сброс ядра nRTCRST</a></h3>
+<p>Сигнал <code>nRTCRST</code> сбрасывает счётчик и логику домена <code>CLK1HZ</code>. Он может быть
+подан асинхронно, но сниматься должен <strong>синхронно с <code>CLK1HZ</code></strong>. Нарушение
+этого требования приводит к тому, что разные элементы домена выходят
+из сброса в разных тактах, и счётчик может начать работу с неопределённого
+значения.</p>
+<h3 id="сброс-питания-npor"><a class="header" href="#сброс-питания-npor">Сброс питания nPOR</a></h3>
+<p>Сигнал <code>nPOR</code> связан с включением питания. Он сбрасывает те регистры,
+которые должны переживать сброс шины: <code>RTCMR</code>, <code>RTCTOFFSET</code>, <code>RTCTCOUNT</code>.
+В системе, где сохранение будильника при сбросе шины не требуется, <code>nPOR</code>
+может быть объединён с <code>PRESETn</code>.</p>
+<h3 id="порядок-снятия-сброса"><a class="header" href="#порядок-снятия-сброса">Порядок снятия сброса</a></h3>
+<p>Рекомендуется следующий порядок:</p>
+<ol>
+<li>Подать питание, снять <code>nPOR</code>.</li>
+<li>Снять <code>PRESETn</code> — интерфейс APB становится доступным.</li>
+<li>Снять <code>nRTCRST</code> синхронно с <code>CLK1HZ</code>.</li>
+</ol>
+<p>Если <code>nRTCRST</code> снимается раньше, чем стабилизировался <code>CLK1HZ</code>, счётчик
+может получить лишний импульс.</p>
+<h2 id="232-тактовые-сигналы"><a class="header" href="#232-тактовые-сигналы">2.3.2. Тактовые сигналы</a></h2>
+<p>Контроллер использует два тактовых сигнала.</p>
+<p><strong><code>PCLK</code></strong> — тактовый сигнал шины APB. От него зависят все обращения
+к регистрам: чтение, запись, время отклика. Частота <code>PCLK</code> обычно
+значительно выше 1 Гц.</p>
+<p><strong><code>CLK1HZ</code></strong> — сигнал частотой 1 Гц, который непосредственно увеличивает
+счётчик. В типовой системе он формируется делителем от кварцевого
+генератора 32,768 кГц (2¹⁵ Гц). Деление на 32768 даёт ровно 1 Гц, а
+точность хода определяется точностью кварца.</p>
+<h3 id="требования"><a class="header" href="#требования">Требования</a></h3>
+<ul>
+<li><code>CLK1HZ</code> должен быть синхронным и свободным от дребезга: каждый лишний
+фронт сдвигает часы на секунду.</li>
+<li>Соотношение частот <code>PCLK</code> и <code>CLK1HZ</code> не фиксировано; блок синхронизации
+рассчитан на произвольное соотношение.</li>
+<li>Оба сигнала должны присутствовать постоянно. Отключение <code>CLK1HZ</code>
+останавливает счётчик, но не мешает обращениям по шине.</li>
+</ul>
+<h2 id="233-работа-rtc"><a class="header" href="#233-работа-rtc">2.3.3. Работа RTC</a></h2>
+<p>В штатном режиме работа контроллера сводится к нескольким повторяющимся
+операциям.</p>
+<h3 id="отсчёт-времени"><a class="header" href="#отсчёт-времени">Отсчёт времени</a></h3>
+<p>Пока <code>RTCCR[0] = 1</code>, каждый фронт <code>CLK1HZ</code> увеличивает счётчик. Значение
+доступно для чтения через <code>RTCDR</code> в любой момент.</p>
+<h3 id="установка-времени"><a class="header" href="#установка-времени">Установка времени</a></h3>
+<p>Запись в <code>RTCLR</code> передаётся через блок синхронизации и загружается
+в счётчик. С этого момента счёт продолжается от нового значения.</p>
+<h3 id="будильник"><a class="header" href="#будильник">Будильник</a></h3>
+<p>Программное обеспечение записывает в <code>RTCMR</code> значение, при достижении
+которого должен возникнуть запрос прерывания. Когда счётчик сравнивается
+с этим значением, устанавливается <code>RTCRIS[0]</code>.</p>
+<h3 id="обработка-прерывания"><a class="header" href="#обработка-прерывания">Обработка прерывания</a></h3>
+<p>Последовательность действий программного обеспечения:</p>
+<ol>
+<li>Разрешить прерывание: <code>RTCIMSC[0] = 1</code>.</li>
+<li>По входу в обработчик прочитать <code>RTCMIS</code>, чтобы убедиться, что источник —
+контроллер RTC.</li>
+<li>Сбросить флаг: записать <code>1</code> в <code>RTCICR[0]</code>.</li>
+<li>При необходимости запрограммировать следующее срабатывание, записав
+новое значение в <code>RTCMR</code>.</li>
+</ol>
+<p>Сброс флага обязателен: без него <code>RTCINTR</code> останется активным, и прерывание
+будет возникать повторно.</p>
+<h3 id="диаграмма-состояний-флага"><a class="header" href="#диаграмма-состояний-флага">Диаграмма состояний флага</a></h3>
+<pre><code class="language-text">                 совпадение счётчика и RTCMR
+        ┌──────────────────────────────────────────┐
+        │                                          ▼
+   ┌─────────┐                              ┌─────────────┐
+   │ RIS = 0 │                              │  RIS = 1    │
+   └─────────┘                              └──────┬──────┘
+        ▲                                          │
+        │            запись 1 в RTCICR[0]          │
+        └──────────────────────────────────────────┘
+</code></pre>
+<p>Пока <code>RIS = 1</code> и <code>RTCIMSC[0] = 1</code>, выход <code>RTCINTR</code> активен. Если маска
+снята, флаг сохраняется, но прерывание не выдаётся; при последующем
+разрешении прерывание сработает сразу.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="31-общие-сведения"><a class="header" href="#31-общие-сведения">3.1. Общие сведения</a></h1>
+<p>Контроллер предоставляет набор 32-битных регистров, отображённых
+в адресное пространство системы. Базовый адрес блока назначается при
+интеграции; все смещения в этой главе указаны относительно него.</p>
+<h2 id="правила-доступа"><a class="header" href="#правила-доступа">Правила доступа</a></h2>
+<ul>
+<li>Все обращения выполняются 32-битными словами и выровнены по границе
+слова.</li>
+<li>Адрес регистра складывается из базового адреса блока и смещения:
+<code>адрес = base + offset</code>.</li>
+<li>Регистры, помеченные как RO, доступны только для чтения.</li>
+<li>Регистры, помеченные как WO, доступны только для записи.</li>
+<li>Запись в зарезервированные поля запрещена (DNM). При записи в регистр
+зарезервированные биты должны сохранять прочитанное значение.</li>
+<li>Чтение неиспользуемых битов возвращает ноль, если не указано иное.</li>
+</ul>
+<h2 id="группы-регистров"><a class="header" href="#группы-регистров">Группы регистров</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Диапазон смещений</th><th>Группа</th></tr>
+</thead>
+<tbody>
+<tr><td><code>0x000</code>–<code>0x01C</code></td><td>Общие регистры</td></tr>
+<tr><td><code>0x080</code>–<code>0x090</code></td><td>Тестовые регистры (глава 4)</td></tr>
+<tr><td><code>0xFE0</code>–<code>0xFEC</code></td><td>Регистры идентификации периферии</td></tr>
+<tr><td><code>0xFF0</code>–<code>0xFFC</code></td><td>Регистры идентификации PrimeCell</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="сброс-регистров"><a class="header" href="#сброс-регистров">Сброс регистров</a></h2>
+<p>Большинство регистров сбрасываются сигналом <code>PRESETn</code>. Исключение
+составляют <code>RTCMR</code>, <code>RTCTOFFSET</code> и <code>RTCTCOUNT</code>: они сохраняют значение
+при сбросе шины и сбрасываются только сигналом <code>nPOR</code>. В таблицах этой
+главы такие регистры отмечены отдельно.</p>
+<h2 id="соглашение-об-именах"><a class="header" href="#соглашение-об-именах">Соглашение об именах</a></h2>
+<p>Регистры имеют префикс <code>RTC</code>. Суффиксы образованы от английских названий:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Суффикс</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>DR</code></td><td>Data Register — регистр данных</td></tr>
+<tr><td><code>MR</code></td><td>Match Register — регистр совпадения</td></tr>
+<tr><td><code>LR</code></td><td>Load Register — регистр загрузки</td></tr>
+<tr><td><code>CR</code></td><td>Control Register — регистр управления</td></tr>
+<tr><td><code>IMSC</code></td><td>Interrupt Mask Set/Clear — маска прерывания</td></tr>
+<tr><td><code>RIS</code></td><td>Raw Interrupt Status — сырой статус прерывания</td></tr>
+<tr><td><code>MIS</code></td><td>Masked Interrupt Status — маскированный статус</td></tr>
+<tr><td><code>ICR</code></td><td>Interrupt Clear — сброс прерывания</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="32-сводка-регистров"><a class="header" href="#32-сводка-регистров">3.2. Сводка регистров</a></h1>
+<p>В таблице приведены все программно-доступные регистры контроллера.
+Смещения указаны относительно базового адреса блока.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Смещение</th><th>Имя</th><th>Тип</th><th>Ширина</th><th>Сброс</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>0x000</code></td><td><code>RTCDR</code></td><td>RO</td><td>32</td><td>—</td><td>Текущее значение счётчика</td></tr>
+<tr><td><code>0x004</code></td><td><code>RTCMR</code></td><td>RW</td><td>32</td><td><code>0x00000000</code></td><td>Значение совпадения (будильник)</td></tr>
+<tr><td><code>0x008</code></td><td><code>RTCLR</code></td><td>RW</td><td>32</td><td><code>0x00000000</code></td><td>Загрузка счётчика</td></tr>
+<tr><td><code>0x00C</code></td><td><code>RTCCR</code></td><td>RW</td><td>1</td><td><code>0x00000000</code></td><td>Управление: разрешение счёта</td></tr>
+<tr><td><code>0x010</code></td><td><code>RTCIMSC</code></td><td>RW</td><td>1</td><td><code>0x00000000</code></td><td>Маска прерывания</td></tr>
+<tr><td><code>0x014</code></td><td><code>RTCRIS</code></td><td>RO</td><td>1</td><td><code>0x00000000</code></td><td>Сырой статус прерывания</td></tr>
+<tr><td><code>0x018</code></td><td><code>RTCMIS</code></td><td>RO</td><td>1</td><td><code>0x00000000</code></td><td>Маскированный статус прерывания</td></tr>
+<tr><td><code>0x01C</code></td><td><code>RTCICR</code></td><td>WO</td><td>1</td><td><code>0x00000000</code></td><td>Сброс прерывания</td></tr>
+<tr><td><code>0x080</code></td><td><code>RTCITCR</code></td><td>RW</td><td>3</td><td><code>0x00000000</code></td><td>Управление интеграционным тестом</td></tr>
+<tr><td><code>0x084</code></td><td><code>RTCITIP</code></td><td>RW</td><td>1</td><td><code>0x00000000</code></td><td>Установка входов теста</td></tr>
+<tr><td><code>0x088</code></td><td><code>RTCITOP</code></td><td>RW</td><td>1</td><td><code>0x00000000</code></td><td>Наблюдение выходов теста</td></tr>
+<tr><td><code>0x08C</code></td><td><code>RTCTOFFSET</code></td><td>RW</td><td>32</td><td><code>0x00000000</code></td><td>Тестовое смещение</td></tr>
+<tr><td><code>0x090</code></td><td><code>RTCTCOUNT</code></td><td>RW</td><td>32</td><td><code>0x00000000</code></td><td>Тестовое значение счётчика</td></tr>
+<tr><td><code>0xFE0</code></td><td><code>RTCPeriphID0</code></td><td>RO</td><td>8</td><td><code>0x31</code></td><td>Идентификация периферии, байт 0</td></tr>
+<tr><td><code>0xFE4</code></td><td><code>RTCPeriphID1</code></td><td>RO</td><td>8</td><td><code>0x10</code></td><td>Идентификация периферии, байт 1</td></tr>
+<tr><td><code>0xFE8</code></td><td><code>RTCPeriphID2</code></td><td>RO</td><td>8</td><td><code>0x14</code></td><td>Идентификация периферии, байт 2</td></tr>
+<tr><td><code>0xFEC</code></td><td><code>RTCPeriphID3</code></td><td>RO</td><td>8</td><td><code>0x00</code></td><td>Идентификация периферии, байт 3</td></tr>
+<tr><td><code>0xFF0</code></td><td><code>RTCPCellID0</code></td><td>RO</td><td>8</td><td><code>0x0D</code></td><td>Идентификация PrimeCell, байт 0</td></tr>
+<tr><td><code>0xFF4</code></td><td><code>RTCPCellID1</code></td><td>RO</td><td>8</td><td><code>0xF0</code></td><td>Идентификация PrimeCell, байт 1</td></tr>
+<tr><td><code>0xFF8</code></td><td><code>RTCPCellID2</code></td><td>RO</td><td>8</td><td><code>0x05</code></td><td>Идентификация PrimeCell, байт 2</td></tr>
+<tr><td><code>0xFFC</code></td><td><code>RTCPCellID3</code></td><td>RO</td><td>8</td><td><code>0xB1</code></td><td>Идентификация PrimeCell, байт 3</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="пояснения-к-таблице"><a class="header" href="#пояснения-к-таблице">Пояснения к таблице</a></h2>
+<p><strong>Ширина.</strong> Указана ширина используемой части регистра. Регистры <code>RTCCR</code>,
+<code>RTCIMSC</code>, <code>RTCRIS</code>, <code>RTCMIS</code> и <code>RTCICR</code> занимают одно 32-битное слово,
+но содержат единственный значащий бит <code>[0]</code>; остальные биты зарезервированы
+и читаются как нули.</p>
+<p><strong>Сброс.</strong> Для <code>RTCDR</code> значение после сброса не определено: оно зависит
+от состояния счётчика. Для <code>RTCMR</code> указанное значение действует после
+сброса по питанию (<code>nPOR</code>); сброс шины <code>PRESETn</code> на этот регистр
+не влияет.</p>
+<p><strong>Тип.</strong> <code>WO</code> означает, что чтение регистра не имеет смысла и возвращает
+неопределённое значение. <code>RO</code> означает, что запись игнорируется.</p>
+<h2 id="карта-адресов"><a class="header" href="#карта-адресов">Карта адресов</a></h2>
+<pre><code class="language-text">base + 0x000  RTCDR        ┐
+base + 0x004  RTCMR        │
+base + 0x008  RTCLR        │ общие регистры
+base + 0x00C  RTCCR        │
+base + 0x010  RTCIMSC      │
+base + 0x014  RTCRIS       │
+base + 0x018  RTCMIS       │
+base + 0x01C  RTCICR       ┘
+base + 0x080  RTCITCR      ┐
+base + 0x084  RTCITIP      │ тестовые регистры
+base + 0x088  RTCITOP      │
+base + 0x08C  RTCTOFFSET   │
+base + 0x090  RTCTCOUNT    ┘
+base + 0xFE0  RTCPeriphID0 ┐
+base + 0xFE4  RTCPeriphID1 │ идентификация периферии
+base + 0xFE8  RTCPeriphID2 │
+base + 0xFEC  RTCPeriphID3 ┘
+base + 0xFF0  RTCPCellID0  ┐
+base + 0xFF4  RTCPCellID1  │ идентификация PrimeCell
+base + 0xFF8  RTCPCellID2  │
+base + 0xFFC  RTCPCellID3  ┘
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="33-общие-регистры"><a class="header" href="#33-общие-регистры">3.3. Общие регистры</a></h1>
+<p>Общие регистры расположены в диапазоне смещений <code>0x000</code>–<code>0x01C</code>. Они делятся
+на две группы: регистры данных и управления (<code>RTCDR</code>, <code>RTCMR</code>, <code>RTCLR</code>,
+<code>RTCCR</code>) и регистры прерывания (<code>RTCIMSC</code>, <code>RTCRIS</code>, <code>RTCMIS</code>, <code>RTCICR</code>).</p>
+<h2 id="перечень"><a class="header" href="#перечень">Перечень</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Регистр</th><th>Смещение</th><th>Тип</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RTCDR</code></td><td><code>0x000</code></td><td>RO</td><td>Текущее значение счётчика</td></tr>
+<tr><td><code>RTCMR</code></td><td><code>0x004</code></td><td>RW</td><td>Значение совпадения</td></tr>
+<tr><td><code>RTCLR</code></td><td><code>0x008</code></td><td>RW</td><td>Загрузка счётчика</td></tr>
+<tr><td><code>RTCCR</code></td><td><code>0x00C</code></td><td>RW</td><td>Управление счётом</td></tr>
+<tr><td><code>RTCIMSC</code></td><td><code>0x010</code></td><td>RW</td><td>Маска прерывания</td></tr>
+<tr><td><code>RTCRIS</code></td><td><code>0x014</code></td><td>RO</td><td>Сырой статус</td></tr>
+<tr><td><code>RTCMIS</code></td><td><code>0x018</code></td><td>RO</td><td>Маскированный статус</td></tr>
+<tr><td><code>RTCICR</code></td><td><code>0x01C</code></td><td>WO</td><td>Сброс прерывания</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="связь-регистров"><a class="header" href="#связь-регистров">Связь регистров</a></h2>
+<pre><code class="language-text">        запись                     чтение
+   ┌──────────────┐          ┌──────────────┐
+   │    RTCLR     │          │    RTCDR     │
+   └──────┬───────┘          └──────▲───────┘
+          │ загрузка                │ текущее значение
+   ┌──────▼───────┐                 │
+   │   Счётчик    │─────────────────┘
+   └──────┬───────┘
+          │ сравнение
+   ┌──────▼───────┐
+   │    RTCMR     │
+   └──────┬───────┘
+          │ совпадение
+   ┌──────▼───────┐      ┌──────────────┐
+   │    RTCRIS    │─AND─▶│    RTCMIS    │──▶ RTCINTR
+   └──────▲───────┘      └──────▲───────┘
+          │ сброс               │
+   ┌──────┴───────┐      ┌──────┴───────┐
+   │    RTCICR    │      │   RTCIMSC    │
+   └──────────────┘      └──────────────┘
+</code></pre>
+<h2 id="общие-правила"><a class="header" href="#общие-правила">Общие правила</a></h2>
+<ul>
+<li>Значение счётчика всегда доступно через <code>RTCDR</code>; для записи используется
+только <code>RTCLR</code>.</li>
+<li>Флаг прерывания устанавливается аппаратно и сбрасывается только записью
+в <code>RTCICR</code>.</li>
+<li>Маска прерывания не влияет на флаг в <code>RTCRIS</code>: она влияет только
+на <code>RTCMIS</code> и выход <code>RTCINTR</code>.</li>
+</ul>
+<p>Далее каждый регистр описан отдельно, с таблицей битовых полей.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="331-регистр-данных-rtcdr"><a class="header" href="#331-регистр-данных-rtcdr">3.3.1. Регистр данных RTCDR</a></h1>
+<p><code>RTCDR</code> — 32-битный регистр только для чтения, содержащий текущее значение
+счётчика секунд.</p>
+<h2 id="расположение"><a class="header" href="#расположение">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x000</code></td></tr>
+<tr><td>Тип</td><td>RO</td></tr>
+<tr><td>Ширина</td><td>32 бита</td></tr>
+<tr><td>Значение после сброса</td><td>Не определено</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля"><a class="header" href="#битовые-поля">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:0</td><td><code>RTCDR</code></td><td>RO</td><td>Текущее значение счётчика</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание"><a class="header" href="#описание">Описание</a></h2>
+<p>Чтение <code>RTCDR</code> возвращает значение, которое счётчик имел на момент
+обращения. Значение передаётся из домена <code>CLK1HZ</code> в домен <code>PCLK</code> через
+блок синхронизации, поэтому оно может отставать от истинного на несколько
+тактов <code>PCLK</code>.</p>
+<p>Регистр доступен как в штатном режиме, так и при остановленном счётчике.
+В последнем случае чтение возвращает последнее значение, которое счётчик
+принял до остановки.</p>
+<h2 id="запись"><a class="header" href="#запись">Запись</a></h2>
+<p>Запись в <code>RTCDR</code> игнорируется. Для изменения значения счётчика используется
+регистр <code>RTCLR</code> (см. раздел 3.3.3).</p>
+<h2 id="пример-использования"><a class="header" href="#пример-использования">Пример использования</a></h2>
+<pre><code class="language-c">/* Прочитать текущее время в секундах */
+uint32_t now = *(volatile uint32_t *)(RTC_BASE + 0x000);
+</code></pre>
+<p>Поскольку счётчик 32-битный, значение переполняется примерно раз в 136 лет.
+При вычислении разницы между двумя показаниями переполнение можно
+не учитывать, если интервал заведомо меньше периода оборота: разность
+беззнаковых 32-битных чисел даёт корректный результат и при переходе через
+ноль.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="332-регистр-совпадения-rtcmr"><a class="header" href="#332-регистр-совпадения-rtcmr">3.3.2. Регистр совпадения RTCMR</a></h1>
+<p><code>RTCMR</code> — 32-битный регистр чтения/записи, содержащий значение, при
+достижении которого счётчиком формируется прерывание.</p>
+<h2 id="расположение-1"><a class="header" href="#расположение-1">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x004</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>32 бита</td></tr>
+<tr><td>Значение после сброса</td><td><code>0x00000000</code> (по <code>nPOR</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля-1"><a class="header" href="#битовые-поля-1">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:0</td><td><code>RTCMR</code></td><td>RW</td><td>Значение совпадения</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание-1"><a class="header" href="#описание-1">Описание</a></h2>
+<p>Когда значение счётчика становится равным значению <code>RTCMR</code>, блок обновления
+устанавливает флаг <code>RTCRIS[0]</code>. Если прерывание разрешено, на выходе
+<code>RTCINTR</code> появляется запрос.</p>
+<p>Сравнение выполняется на каждом шаге счёта, то есть с частотой 1 Гц.
+Совпадение возможно только один раз за полный оборот счётчика, поэтому
+после срабатывания программное обеспечение должно записать новое значение,
+если требуется повторное срабатывание.</p>
+<h2 id="сохранение-при-сбросе-шины"><a class="header" href="#сохранение-при-сбросе-шины">Сохранение при сбросе шины</a></h2>
+<p><code>RTCMR</code> не сбрасывается сигналом <code>PRESETn</code>. Значение сохраняется при
+перезапуске шины и сбрасывается только сигналом <code>nPOR</code> (сброс по включению
+питания). Это позволяет сохранить настройку будильника, если сброс шины
+не означает потерю питания.</p>
+<h2 id="пример-использования-1"><a class="header" href="#пример-использования-1">Пример использования</a></h2>
+<pre><code class="language-c">/* Запрограммировать срабатывание через 60 секунд */
+uint32_t now = *(volatile uint32_t *)(RTC_BASE + 0x000);
+*(volatile uint32_t *)(RTC_BASE + 0x004) = now + 60;
+
+/* Разрешить прерывание по совпадению */
+*(volatile uint32_t *)(RTC_BASE + 0x010) |= 1;
+</code></pre>
+<h2 id="замечание-о-точном-моменте"><a class="header" href="#замечание-о-точном-моменте">Замечание о точном моменте</a></h2>
+<p>Запись в <code>RTCMR</code> проходит через блок синхронизации. Если новое значение
+равно текущему значению счётчика, флаг может установиться в ближайшем такте
+<code>CLK1HZ</code> либо не установиться вовсе — в зависимости от того, успела ли
+запись примениться до момента сравнения. Для надёжного срабатывания
+следует программировать значение, отличное от текущего.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="333-регистр-загрузки-rtclr"><a class="header" href="#333-регистр-загрузки-rtclr">3.3.3. Регистр загрузки RTCLR</a></h1>
+<p><code>RTCLR</code> — 32-битный регистр, запись в который загружает счётчик новым
+значением.</p>
+<h2 id="расположение-2"><a class="header" href="#расположение-2">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x008</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>32 бита</td></tr>
+<tr><td>Значение после сброса</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля-2"><a class="header" href="#битовые-поля-2">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:0</td><td><code>RTCLR</code></td><td>RW</td><td>Значение, загружаемое в счётчик</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание-2"><a class="header" href="#описание-2">Описание</a></h2>
+<p>Запись в <code>RTCLR</code> передаёт новое значение в блок обновления, после чего
+счётчик принимает его и продолжает счёт с этого значения. Регистр не
+останавливает счётчик и не сбрасывает флаг прерывания.</p>
+<p>Чтение возвращает последнее записанное значение. Оно не обязано совпадать
+с текущим значением счётчика: для чтения текущего времени используется
+<code>RTCDR</code>.</p>
+<h2 id="применение"><a class="header" href="#применение">Применение</a></h2>
+<p><code>RTCLR</code> — единственный способ изменить показания счётчика. Типичный сценарий
+установки календарного времени:</p>
+<pre><code class="language-c">/* Установить время: секунды от выбранной эпохи */
+uint64_t seconds = ...;
+*(volatile uint32_t *)(RTC_BASE + 0x008) = (uint32_t)seconds;
+</code></pre>
+<h2 id="задержка-применения"><a class="header" href="#задержка-применения">Задержка применения</a></h2>
+<p>Между записью и фактической загрузкой значения проходит несколько тактов
+<code>CLK1HZ</code> — значение пересекает границу тактовых доменов. При частоте 1 Гц
+задержка может достигать одной секунды. Если приложению нужна точность
+до секунды, значение следует загружать заранее либо компенсировать задержку.</p>
+<h2 id="взаимодействие-со-счётчиком"><a class="header" href="#взаимодействие-со-счётчиком">Взаимодействие со счётчиком</a></h2>
+<p>Если счётчик остановлен (<code>RTCCR[0] = 0</code>), запись в <code>RTCLR</code> всё равно
+загружает новое значение. Счёт начнётся с этого значения после того, как
+бит <code>RTCEN</code> будет установлен.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="334-регистр-управления-rtccr"><a class="header" href="#334-регистр-управления-rtccr">3.3.4. Регистр управления RTCCR</a></h1>
+<p><code>RTCCR</code> — регистр управления, содержащий единственный значащий бит,
+который разрешает или запрещает увеличение счётчика.</p>
+<h2 id="расположение-3"><a class="header" href="#расположение-3">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x00C</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>1 бит</td></tr>
+<tr><td>Значение после сброса</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля-3"><a class="header" href="#битовые-поля-3">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:1</td><td>—</td><td>—</td><td>Зарезервировано, читается как ноль, изменять нельзя</td></tr>
+<tr><td>0</td><td><code>RTCEN</code></td><td>RW</td><td>1 — счёт разрешён, 0 — счёт остановлен</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание-3"><a class="header" href="#описание-3">Описание</a></h2>
+<p>Бит <code>RTCEN</code> управляет инкрементом счётчика. Когда он равен единице, каждый
+фронт <code>CLK1HZ</code> увеличивает счётчик. Когда он равен нулю, счётчик сохраняет
+текущее значение.</p>
+<p>Остальные функции контроллера при остановленном счётчике продолжают
+работать: чтение <code>RTCDR</code>, запись <code>RTCLR</code>, сравнение с <code>RTCMR</code> и обработка
+прерываний.</p>
+<h2 id="значение-после-сброса-1"><a class="header" href="#значение-после-сброса-1">Значение после сброса</a></h2>
+<p>После сброса бит равен нулю, то есть счётчик остановлен. Это защищает
+систему от отсчёта времени до того, как программное обеспечение загрузит
+корректное начальное значение.</p>
+<h2 id="пример-использования-2"><a class="header" href="#пример-использования-2">Пример использования</a></h2>
+<pre><code class="language-c">#define RTC_CR      (RTC_BASE + 0x00C)
+#define RTC_CR_EN   (1u &lt;&lt; 0)
+
+/* Загрузить время и запустить счёт */
+*(volatile uint32_t *)(RTC_BASE + 0x008) = start_seconds;
+*(volatile uint32_t *)RTC_CR |= RTC_CR_EN;
+
+/* Остановить счёт, сохранив показания */
+*(volatile uint32_t *)RTC_CR &amp;= ~RTC_CR_EN;
+</code></pre>
+<h2 id="замечание"><a class="header" href="#замечание">Замечание</a></h2>
+<p>Изменение бита <code>RTCEN</code> также проходит через блок синхронизации. Поэтому
+между записью и фактической остановкой или запуском счётчика может пройти
+до одного такта <code>CLK1HZ</code>. Если счётчик нужно остановить точно, следует
+учитывать эту задержку.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="335-регистр-маски-прерывания-rtcimsc"><a class="header" href="#335-регистр-маски-прерывания-rtcimsc">3.3.5. Регистр маски прерывания RTCIMSC</a></h1>
+<p><code>RTCIMSC</code> — регистр чтения/записи, управляющий маскированием прерывания
+от контроллера.</p>
+<h2 id="расположение-4"><a class="header" href="#расположение-4">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x010</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>1 бит</td></tr>
+<tr><td>Значение после сброса</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля-4"><a class="header" href="#битовые-поля-4">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:1</td><td>—</td><td>—</td><td>Зарезервировано, читается как ноль, изменять нельзя</td></tr>
+<tr><td>0</td><td><code>RTCIMSC</code></td><td>RW</td><td>1 — прерывание разрешено, 0 — замаскировано</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание-4"><a class="header" href="#описание-4">Описание</a></h2>
+<p>Бит <code>RTCIMSC[0]</code> определяет, попадает ли флаг совпадения на выход
+<code>RTCINTR</code>. При чтении возвращается текущее значение маски.</p>
+<p>Несмотря на название «маска», единица в бите <strong>разрешает</strong> прерывание,
+а ноль — маскирует его. Такое соглашение принято в компонентах PrimeCell
+и позволяет описывать комбинацию регистров одной формулой:</p>
+<pre><code class="language-text">RTCMIS = RTCRIS AND RTCIMSC
+</code></pre>
+<h2 id="влияние-на-флаг"><a class="header" href="#влияние-на-флаг">Влияние на флаг</a></h2>
+<p>Маска не влияет на сам флаг в <code>RTCRIS</code>. Если прерывание замаскировано,
+флаг всё равно устанавливается и сохраняется. После снятия маски
+необработанное прерывание сработает немедленно — на выходе <code>RTCINTR</code>
+появится активный уровень.</p>
+<p>Это свойство следует учитывать при инициализации: перед разрешением
+прерывания полезно сбросить возможный устаревший флаг записью в <code>RTCICR</code>.</p>
+<h2 id="пример-использования-3"><a class="header" href="#пример-использования-3">Пример использования</a></h2>
+<pre><code class="language-c">#define RTC_IMSC    (RTC_BASE + 0x010)
+#define RTC_ICR     (RTC_BASE + 0x01C)
+
+/* Сбросить возможный старый флаг, затем разрешить прерывание */
+*(volatile uint32_t *)RTC_ICR  = 1;
+*(volatile uint32_t *)RTC_IMSC = 1;
+</code></pre>
+<h2 id="замечание-о-задержке-1"><a class="header" href="#замечание-о-задержке-1">Замечание о задержке</a></h2>
+<p>Запись маски пересекает границу тактовых доменов и применяется через
+несколько тактов <code>PCLK</code>. Немедленное чтение регистра может вернуть ещё
+старое значение.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="336-сырой-статус-прерывания-rtcris"><a class="header" href="#336-сырой-статус-прерывания-rtcris">3.3.6. Сырой статус прерывания RTCRIS</a></h1>
+<p><code>RTCRIS</code> — регистр только для чтения, содержащий «сырое» состояние флага
+прерывания, то есть состояние до маскирования.</p>
+<h2 id="расположение-5"><a class="header" href="#расположение-5">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x014</code></td></tr>
+<tr><td>Тип</td><td>RO</td></tr>
+<tr><td>Ширина</td><td>1 бит</td></tr>
+<tr><td>Значение после сброса</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля-5"><a class="header" href="#битовые-поля-5">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:1</td><td>—</td><td>—</td><td>Зарезервировано, читается как ноль</td></tr>
+<tr><td>0</td><td><code>RTCRIS</code></td><td>RO</td><td>1 — произошло совпадение счётчика с <code>RTCMR</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание-5"><a class="header" href="#описание-5">Описание</a></h2>
+<p>Бит устанавливается аппаратно в момент, когда значение счётчика становится
+равным значению <code>RTCMR</code>. Флаг не зависит от регистра <code>RTCIMSC</code>
+и сохраняется до явного сброса.</p>
+<p>Запись в регистр не оказывает действия. Для сброса флага используется
+регистр <code>RTCICR</code>.</p>
+<h2 id="применение-в-обработчике-прерывания"><a class="header" href="#применение-в-обработчике-прерывания">Применение в обработчике прерывания</a></h2>
+<p>Регистр <code>RTCRIS</code> удобно читать в обработчике, когда нужно понять причину
+прерывания до сброса флага: значение <code>RTCMIS</code> показывает, что прерывание
+разрешено, а <code>RTCRIS</code> — что событие действительно произошло.</p>
+<pre><code class="language-c">uint32_t raw  = *(volatile uint32_t *)(RTC_BASE + 0x014);
+uint32_t mask = *(volatile uint32_t *)(RTC_BASE + 0x018);
+
+if (raw &amp; 1) {
+    /* Совпадение произошло */
+    *(volatile uint32_t *)(RTC_BASE + 0x01C) = 1; /* сброс */
+}
+</code></pre>
+<h2 id="замечание-о-синхронизации"><a class="header" href="#замечание-о-синхронизации">Замечание о синхронизации</a></h2>
+<p><code>RTCRIS</code> формируется в домене <code>CLK1HZ</code> и передаётся в домен <code>PCLK</code> через
+блок синхронизации. Поэтому между фактическим совпадением и появлением
+единицы при чтении может пройти несколько тактов <code>PCLK</code>. В масштабе секунды
+это незаметно, но при отладке пошаговыми командами задержку стоит учитывать.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="337-маскированный-статус-прерывания-rtcmis"><a class="header" href="#337-маскированный-статус-прерывания-rtcmis">3.3.7. Маскированный статус прерывания RTCMIS</a></h1>
+<p><code>RTCMIS</code> — регистр только для чтения, содержащий состояние прерывания
+после применения маски.</p>
+<h2 id="расположение-6"><a class="header" href="#расположение-6">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x018</code></td></tr>
+<tr><td>Тип</td><td>RO</td></tr>
+<tr><td>Ширина</td><td>1 бит</td></tr>
+<tr><td>Значение после сброса</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля-6"><a class="header" href="#битовые-поля-6">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:1</td><td>—</td><td>—</td><td>Зарезервировано, читается как ноль</td></tr>
+<tr><td>0</td><td><code>RTCMIS</code></td><td>RO</td><td>1 — прерывание разрешено и флаг установлен</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание-6"><a class="header" href="#описание-6">Описание</a></h2>
+<p>Значение регистра вычисляется как логическое произведение сырого статуса
+и маски:</p>
+<pre><code class="language-text">RTCMIS[0] = RTCRIS[0] AND RTCIMSC[0]
+</code></pre>
+<p>Именно это значение определяет уровень на выходе <code>RTCINTR</code>. Если
+<code>RTCMIS[0] = 1</code>, контроллер запрашивает прерывание.</p>
+<h2 id="отличие-от-rtcris"><a class="header" href="#отличие-от-rtcris">Отличие от RTCRIS</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Ситуация</th><th><code>RTCRIS[0]</code></th><th><code>RTCIMSC[0]</code></th><th><code>RTCMIS[0]</code></th><th><code>RTCINTR</code></th></tr>
+</thead>
+<tbody>
+<tr><td>Совпадения не было</td><td>0</td><td>0</td><td>0</td><td>Не активен</td></tr>
+<tr><td>Совпадение, прерывание запрещено</td><td>1</td><td>0</td><td>0</td><td>Не активен</td></tr>
+<tr><td>Совпадение, прерывание разрешено</td><td>1</td><td>1</td><td>1</td><td>Активен</td></tr>
+<tr><td>Флаг сброшен, прерывание разрешено</td><td>0</td><td>1</td><td>0</td><td>Не активен</td></tr>
+</tbody>
+</table>
+</div>
+<p>Таблица показывает, что маскирование влияет только на выход прерывания,
+но не на сам факт события.</p>
+<h2 id="применение-1"><a class="header" href="#применение-1">Применение</a></h2>
+<p>Чтение <code>RTCMIS</code> в начале обработчика — стандартный способ убедиться, что
+прерывание пришло именно от этого контроллера, особенно если несколько
+устройств используют общую линию запроса.</p>
+<pre><code class="language-c">uint32_t mis = *(volatile uint32_t *)(RTC_BASE + 0x018);
+if (mis &amp; 1) {
+    /* Обработать прерывание RTC */
+}
+</code></pre>
+<h2 id="сброс-1"><a class="header" href="#сброс-1">Сброс</a></h2>
+<p>Регистр доступен только для чтения. Чтобы сбросить <code>RTCMIS</code>, нужно сбросить
+<code>RTCRIS</code> записью в <code>RTCICR</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="338-регистр-сброса-прерывания-rtcicr"><a class="header" href="#338-регистр-сброса-прерывания-rtcicr">3.3.8. Регистр сброса прерывания RTCICR</a></h1>
+<p><code>RTCICR</code> — регистр только для записи, предназначенный для сброса флага
+прерывания.</p>
+<h2 id="расположение-7"><a class="header" href="#расположение-7">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x01C</code></td></tr>
+<tr><td>Тип</td><td>WO</td></tr>
+<tr><td>Ширина</td><td>1 бит</td></tr>
+<tr><td>Значение после сброса</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="битовые-поля-7"><a class="header" href="#битовые-поля-7">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Тип</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>31:1</td><td>—</td><td>—</td><td>Зарезервировано, читается как ноль</td></tr>
+<tr><td>0</td><td><code>RTCICR</code></td><td>WO</td><td>Запись 1 сбрасывает прерывание; запись 0 не действует</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="описание-7"><a class="header" href="#описание-7">Описание</a></h2>
+<p>Запись единицы в бит <code>[0]</code> сбрасывает флаг <code>RTCRIS[0]</code>. Запись нуля
+не изменяет состояние флага — это позволяет сбрасывать отдельные биты,
+не затрагивая остальные (хотя в данном контроллере значащий бит всего один).</p>
+<p>Регистр только для записи: чтение возвращает неопределённое значение
+и не должно использоваться.</p>
+<h2 id="порядок-обработки-прерывания"><a class="header" href="#порядок-обработки-прерывания">Порядок обработки прерывания</a></h2>
+<p>Типичный обработчик выполняет три шага:</p>
+<pre><code class="language-c">void rtc_irq_handler(void)
+{
+    /* 1. Проверить, что прерывание наше */
+    if (!(*(volatile uint32_t *)(RTC_BASE + 0x018) &amp; 1))
+        return;
+
+    /* 2. Сбросить флаг */
+    *(volatile uint32_t *)(RTC_BASE + 0x01C) = 1;
+
+    /* 3. Запрограммировать следующее срабатывание при необходимости */
+    *(volatile uint32_t *)(RTC_BASE + 0x004) =
+        *(volatile uint32_t *)(RTC_BASE + 0x000) + 60;
+}
+</code></pre>
+<h2 id="почему-важен-порядок"><a class="header" href="#почему-важен-порядок">Почему важен порядок</a></h2>
+<p>Если сбросить флаг до чтения причины, можно потерять информацию о событии.
+Если не сбросить флаг вообще, выход <code>RTCINTR</code> останется активным, и после
+выхода из обработчика прерывание возникнет снова — получится бесконечный
+цикл обработки одного и того же события.</p>
+<h2 id="запись-нуля"><a class="header" href="#запись-нуля">Запись нуля</a></h2>
+<p>Запись <code>0</code> в <code>RTCICR</code> не является ошибкой, но и не выполняет никаких
+действий. Некоторые драйверы используют это свойство, чтобы выполнять
+«пустую» запись для синхронизации доступа к шине.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="34-регистры-идентификации-периферии-rtcperiphid0-3"><a class="header" href="#34-регистры-идентификации-периферии-rtcperiphid0-3">3.4. Регистры идентификации периферии RTCPeriphID0-3</a></h1>
+<p>Четыре 8-битных регистра в диапазоне смещений <code>0xFE0</code>–<code>0xFEC</code> содержат
+постоянную информацию о компоненте. Вместе они образуют 32-битный
+идентификатор периферии.</p>
+<h2 id="расположение-8"><a class="header" href="#расположение-8">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Регистр</th><th>Смещение</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RTCPeriphID0</code></td><td><code>0xFE0</code></td><td><code>0x31</code></td></tr>
+<tr><td><code>RTCPeriphID1</code></td><td><code>0xFE4</code></td><td><code>0x10</code></td></tr>
+<tr><td><code>RTCPeriphID2</code></td><td><code>0xFE8</code></td><td><code>0x14</code></td></tr>
+<tr><td><code>RTCPeriphID3</code></td><td><code>0xFEC</code></td><td><code>0x00</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>32-битное слово, образованное этими регистрами (от младшего байта
+к старшему), равно <code>0x00141031</code>.</p>
+<h2 id="назначение-2"><a class="header" href="#назначение-2">Назначение</a></h2>
+<p>Регистры позволяют программному обеспечению убедиться, что по указанному
+адресу находится именно контроллер PL031, а не другое устройство. Это
+полезно при автоматическом обнаружении периферии и при проверке
+совместимости.</p>
+<p>Регистры жёстко заданы в кремнии: запись в них не изменяет значение.</p>
+<h2 id="поля-идентификатора"><a class="header" href="#поля-идентификатора">Поля идентификатора</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Поле</th><th>Смысл</th><th>Значение для PL031</th></tr>
+</thead>
+<tbody>
+<tr><td>PartNumber</td><td>Номер компонента в семействе PrimeCell</td><td>PL031</td></tr>
+<tr><td>Designer</td><td>Код производителя</td><td>ARM</td></tr>
+<tr><td>Revision</td><td>Номер ревизии компонента</td><td>1</td></tr>
+<tr><td>Configuration</td><td>Конфигурация блока</td><td><code>0x00</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>В регистре <code>RTCPeriphID3</code> значащими являются биты <code>[7:0]</code>; они содержат
+поле <code>Configuration</code> и читаются как <code>0x00</code>. Биты <code>[15:8]</code> зарезервированы.</p>
+<p>В регистре <code>RTCPeriphID2</code> биты <code>[7:4]</code> содержат номер ревизии, а биты
+<code>[3:0]</code> — старшую часть кода производителя; для ARM они читаются
+как <code>0x4</code>.</p>
+<h2 id="пример-проверки"><a class="header" href="#пример-проверки">Пример проверки</a></h2>
+<pre><code class="language-c">#define RTC_PERIPHID0 (RTC_BASE + 0xFE0)
+
+static int pl031_present(void)
+{
+    uint32_t id0 = *(volatile uint32_t *)RTC_PERIPHID0;
+    return (id0 &amp; 0xFF) == 0x31;
+}
+</code></pre>
+<p>Проверка только одного байта достаточна, если адрес блока уже известен
+из описания платформы. Для полной идентификации следует прочитать все
+четыре регистра и сравнить составное значение с <code>0x00141031</code>.</p>
+<h2 id="замечание-1"><a class="header" href="#замечание-1">Замечание</a></h2>
+<p>Разрядность регистров — 8 бит, но расположены они в 32-битных словах,
+поэтому при чтении старшие байты слова содержат неопределённые значения.
+При сравнении следует маскировать младший байт.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="35-регистры-идентификации-primecell-rtcpcellid0-3"><a class="header" href="#35-регистры-идентификации-primecell-rtcpcellid0-3">3.5. Регистры идентификации PrimeCell RTCPCellID0-3</a></h1>
+<p>Четыре 8-битных регистра в диапазоне смещений <code>0xFF0</code>–<code>0xFFC</code> образуют
+стандартный идентификатор PrimeCell — общий для всех компонентов этого
+семейства.</p>
+<h2 id="расположение-9"><a class="header" href="#расположение-9">Расположение</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Регистр</th><th>Смещение</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RTCPCellID0</code></td><td><code>0xFF0</code></td><td><code>0x0D</code></td></tr>
+<tr><td><code>RTCPCellID1</code></td><td><code>0xFF4</code></td><td><code>0xF0</code></td></tr>
+<tr><td><code>RTCPCellID2</code></td><td><code>0xFF8</code></td><td><code>0x05</code></td></tr>
+<tr><td><code>RTCPCellID3</code></td><td><code>0xFFC</code></td><td><code>0xB1</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Составное 32-битное значение равно <code>0xB105F00D</code>.</p>
+<h2 id="назначение-3"><a class="header" href="#назначение-3">Назначение</a></h2>
+<p>Идентификатор PrimeCell позволяет программному обеспечению отличить
+компоненты этого семейства от периферии других производителей
+или архитектур. Значение <code>0xB105F00D</code> закреплено за семейством PrimeCell.</p>
+<p>В отличие от <code>RTCPeriphID0-3</code>, которые указывают на конкретный компонент
+(PL031), регистры <code>RTCPCellID0-3</code> указывают на семейство в целом.</p>
+<h2 id="битовые-поля-8"><a class="header" href="#битовые-поля-8">Битовые поля</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Биты</th><th>Имя</th><th>Описание</th></tr>
+</thead>
+<tbody>
+<tr><td>7:0</td><td><code>RTCPCellID0</code></td><td>Читается как <code>0x0D</code></td></tr>
+<tr><td>7:0</td><td><code>RTCPCellID1</code></td><td>Читается как <code>0xF0</code></td></tr>
+<tr><td>7:0</td><td><code>RTCPCellID2</code></td><td>Читается как <code>0x05</code></td></tr>
+<tr><td>7:0</td><td><code>RTCPCellID3</code></td><td>Читается как <code>0xB1</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Биты <code>[15:8]</code> каждого регистра зарезервированы: читаются как неопределённое
+значение и должны считаться нулями.</p>
+<h2 id="пример-проверки-1"><a class="header" href="#пример-проверки-1">Пример проверки</a></h2>
+<pre><code class="language-c">static uint8_t pcell_id_byte(int i)
+{
+    return *(volatile uint32_t *)(RTC_BASE + 0xFF0 + 4 * i) &amp; 0xFF;
+}
+
+static int is_primecell(void)
+{
+    return pcell_id_byte(0) == 0x0D &amp;&amp;
+           pcell_id_byte(1) == 0xF0 &amp;&amp;
+           pcell_id_byte(2) == 0x05 &amp;&amp;
+           pcell_id_byte(3) == 0xB1;
+}
+</code></pre>
+<h2 id="замечание-2"><a class="header" href="#замечание-2">Замечание</a></h2>
+<p>Регистры только для чтения. Запись игнорируется. Поскольку регистры
+8-битные, при чтении 32-битного слова старшие байты содержат
+неопределённые значения — сравнивать нужно только младший байт.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="36-прерывания"><a class="header" href="#36-прерывания">3.6. Прерывания</a></h1>
+<p>Контроллер формирует одно прерывание — по совпадению значения счётчика
+со значением регистра <code>RTCMR</code>. Прерывание выводится сигналом <code>RTCINTR</code>,
+который подключается к контроллеру прерываний системы.</p>
+<h2 id="путь-сигнала"><a class="header" href="#путь-сигнала">Путь сигнала</a></h2>
+<pre><code class="language-text">  счётчик ──┬──────────────┐
+            │              │
+            │        ┌─────▼──────┐
+  RTCMR ────┴───────▶│  сравнение │
+                     └─────┬──────┘
+                           │ совпадение
+                     ┌─────▼──────┐
+                     │  RTCRIS[0] │◀── сброс: RTCICR[0]
+                     └─────┬──────┘
+                           │
+                     ┌─────▼──────┐
+        RTCIMSC[0] ─▶│    AND     │
+                     └─────┬──────┘
+                           │
+                     ┌─────▼──────┐
+                     │  RTCMIS[0] │──▶ RTCINTR
+                     └────────────┘
+</code></pre>
+<h2 id="состояния"><a class="header" href="#состояния">Состояния</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th><code>RTCRIS[0]</code></th><th><code>RTCIMSC[0]</code></th><th><code>RTCMIS[0]</code></th><th><code>RTCINTR</code></th><th>Комментарий</th></tr>
+</thead>
+<tbody>
+<tr><td>0</td><td>0</td><td>0</td><td>Не активен</td><td>События нет, прерывание запрещено</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>Не активен</td><td>События нет, прерывание разрешено</td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>Не активен</td><td>Событие есть, но замаскировано</td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>Активен</td><td>Событие есть, прерывание выдаётся</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="программная-модель"><a class="header" href="#программная-модель">Программная модель</a></h2>
+<h3 id="разрешение"><a class="header" href="#разрешение">Разрешение</a></h3>
+<pre><code class="language-c">*(volatile uint32_t *)(RTC_BASE + 0x010) = 1;   /* RTCIMSC */
+</code></pre>
+<h3 id="запрещение"><a class="header" href="#запрещение">Запрещение</a></h3>
+<pre><code class="language-c">*(volatile uint32_t *)(RTC_BASE + 0x010) = 0;
+</code></pre>
+<h3 id="сброс-флага"><a class="header" href="#сброс-флага">Сброс флага</a></h3>
+<pre><code class="language-c">*(volatile uint32_t *)(RTC_BASE + 0x01C) = 1;   /* RTCICR */
+</code></pre>
+<p>Запись единицы в <code>RTCICR</code> сбрасывает <code>RTCRIS</code>, что автоматически снимает
+<code>RTCMIS</code> и деактивирует <code>RTCINTR</code>.</p>
+<h2 id="рекомендации-по-обработке"><a class="header" href="#рекомендации-по-обработке">Рекомендации по обработке</a></h2>
+<ol>
+<li><strong>Проверяйте источник.</strong> Если линия прерывания разделяется с другими
+устройствами, читайте <code>RTCMIS</code> и убеждайтесь, что бит <code>[0]</code> установлен.</li>
+<li><strong>Сбрасывайте флаг до выхода из обработчика.</strong> Иначе прерывание будет
+повторяться бесконечно.</li>
+<li><strong>Перепрограммируйте <code>RTCMR</code> заранее</strong>, если нужны периодические
+срабатывания: одного совпадения недостаточно для повтора.</li>
+<li><strong>Учитывайте задержку синхронизации.</strong> Между записью в <code>RTCMR</code>
+и фактическим применением значения проходит до одного такта <code>CLK1HZ</code>.</li>
+</ol>
+<h2 id="периодические-прерывания"><a class="header" href="#периодические-прерывания">Периодические прерывания</a></h2>
+<p>Контроллер не имеет встроенного счётчика повторов. Чтобы получить
+периодическое прерывание, обработчик должен сам записать следующее значение:</p>
+<pre><code class="language-c">void rtc_irq_handler(void)
+{
+    if (!(*(volatile uint32_t *)(RTC_BASE + 0x018) &amp; 1))
+        return;
+
+    *(volatile uint32_t *)(RTC_BASE + 0x01C) = 1;
+
+    /* Следующее срабатывание через 1 секунду */
+    *(volatile uint32_t *)(RTC_BASE + 0x004) =
+        *(volatile uint32_t *)(RTC_BASE + 0x000) + 1;
+}
+</code></pre>
+<p>Такой подход даёт точность, ограниченную временем входа в обработчик:
+если обработчик задержится больше чем на секунду, срабатывание будет
+пропущено.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="41-обзор-тестовой-обвязки"><a class="header" href="#41-обзор-тестовой-обвязки">4.1. Обзор тестовой обвязки</a></h1>
+<p>Помимо штатной логики, контроллер содержит интеграционную тестовую обвязку
+(integration test harness). Она позволяет инженеру, работающему с готовым
+кристаллом, управлять внутренними сигналами блоков и наблюдать их состояние
+через обычные регистры APB — без доступа к внутренним цепям.</p>
+<h2 id="задачи-тестовой-обвязки"><a class="header" href="#задачи-тестовой-обвязки">Задачи тестовой обвязки</a></h2>
+<ul>
+<li>Проверить, что блоки контроллера правильно соединены между собой
+на уровне интеграции.</li>
+<li>Наблюдать внутренние сигналы, недоступные через штатные регистры.</li>
+<li>Ускорить проверку медленных цепей: счётчик, тактируемый 1 Гц, иначе
+пришлось бы ждать секунды между шагами.</li>
+</ul>
+<h2 id="структура"><a class="header" href="#структура">Структура</a></h2>
+<pre><code class="language-text">        APB (PCLK)                        CLK1HZ
+   ┌───────────────────┐          ┌───────────────────┐
+   │  RTCITCR  (0x080) │          │                   │
+   │  RTCITIP  (0x084) │─────────▶│  Внутренние блоки │
+   │  RTCITOP  (0x088) │◀─────────│    контроллера    │
+   │  RTCTOFFSET(0x08C)│          │                   │
+   │  RTCTCOUNT(0x090) │          │                   │
+   └───────────────────┘          └───────────────────┘
+</code></pre>
+<p>Регистры <code>RTCITCR</code>, <code>RTCITIP</code> и <code>RTCITOP</code> управляют тестовым режимом
+и передают значения сигналов. Регистры <code>RTCTOFFSET</code> и <code>RTCTCOUNT</code> дают
+прямой доступ к счётчику и его смещению, что позволяет проверять логику
+сравнения, не дожидаясь реального хода времени.</p>
+<h2 id="ограничения"><a class="header" href="#ограничения">Ограничения</a></h2>
+<ul>
+<li>Тестовая обвязка не предназначена для работы в штатном режиме.
+Обращение к тестовым регистрам во время нормальной работы нарушает
+функционирование контроллера.</li>
+<li>Не все сигналы можно протестировать через обвязку. Сигналы сброса
+и тактирования проверяются иначе (см. раздел 4.6).</li>
+<li>Точное назначение отдельных битов тестовых регистров определяется
+реализацией тестовой обвязки; ниже описаны назначение регистров
+и правила доступа к ним.</li>
+</ul>
+<h2 id="порядок-использования"><a class="header" href="#порядок-использования">Порядок использования</a></h2>
+<ol>
+<li>Перевести контроллер в тестовый режим через <code>RTCITCR</code>.</li>
+<li>При необходимости задать значения через <code>RTCITIP</code> или <code>RTCTCOUNT</code>.</li>
+<li>Прочитать результат через <code>RTCITOP</code> или <code>RTCTCOUNT</code>.</li>
+<li>Вывести контроллер из тестового режима и выполнить сброс.</li>
+</ol>
+<p>Выполнять эти действия следует только на стенде или в составе
+производственного теста.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="42-scan-тестирование"><a class="header" href="#42-scan-тестирование">4.2. Scan-тестирование</a></h1>
+<p>Контроллер спроектирован так, чтобы упростить вставку scan-ячеек
+и применение автоматической генерации тестовых воздействий (Automatic Test
+Pattern Generation, ATPG) — альтернативного метода производственного
+тестирования.</p>
+<h2 id="выводы-scan-тестирования"><a class="header" href="#выводы-scan-тестирования">Выводы scan-тестирования</a></h2>
+<p>Выводы организованы с учётом двух тактовых доменов контроллера.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Сигнал</th><th>Домен</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>SCANENABLE</code></td><td>общий</td><td>Разрешение scan-режима</td></tr>
+<tr><td><code>SCANINPCLK</code></td><td><code>PCLK</code></td><td>Вход данных scan-цепочки домена <code>PCLK</code></td></tr>
+<tr><td><code>SCANOUTPCLK</code></td><td><code>PCLK</code></td><td>Выход данных scan-цепочки домена <code>PCLK</code></td></tr>
+<tr><td><code>SCANINCLK1HZ</code></td><td><code>CLK1HZ</code></td><td>Вход данных scan-цепочки домена <code>CLK1HZ</code></td></tr>
+<tr><td><code>SCANOUTCLK1HZ</code></td><td><code>CLK1HZ</code></td><td>Выход данных scan-цепочки домена <code>CLK1HZ</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Разделение цепочек по доменам важно: scan-сдвиг выполняется на тактовой
+частоте соответствующего домена, и объединение доменов в одну цепочку
+потребовало бы дополнительной синхронизации.</p>
+<h2 id="статус-выводов"><a class="header" href="#статус-выводов">Статус выводов</a></h2>
+<p>В текущей ревизии контроллера перечисленные выводы являются
+зарезервированными (place holder): они предусмотрены структурой блока,
+но не описаны как функциональные. Иными словами, они не участвуют
+в штатной работе и не проверяются интеграционными тестовыми векторами
+(см. таблицу в разделе 4.6).</p>
+<h2 id="как-это-используется"><a class="header" href="#как-это-используется">Как это используется</a></h2>
+<p>При производственном тестировании сканирующие цепочки позволяют подать
+на внутренние триггеры произвольную комбинацию значений и прочитать
+результат после одного такта. Это даёт высокое покрытие неисправностей
+без функциональных тестов.</p>
+<p>Для контроллера RTC scan-тестирование особенно полезно для медленного
+домена <code>CLK1HZ</code>: функциональная проверка заняла бы секунды на каждый шаг,
+а scan-сдвиг выполняется за такты.</p>
+<h2 id="различие-между-scan--и-интеграционным-тестом"><a class="header" href="#различие-между-scan--и-интеграционным-тестом">Различие между scan- и интеграционным тестом</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Аспект</th><th>Scan-тест</th><th>Интеграционный тест</th></tr>
+</thead>
+<tbody>
+<tr><td>Доступ</td><td>Внутренние триггеры</td><td>Регистры через APB</td></tr>
+<tr><td>Управление</td><td>Внешний тест-контроллер</td><td>Программное обеспечение</td></tr>
+<tr><td>Скорость</td><td>Такты</td><td>Секунды для домена <code>CLK1HZ</code></td></tr>
+<tr><td>Цель</td><td>Обнаружение дефектов изготовления</td><td>Проверка соединений блоков</td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="43-тестовые-регистры"><a class="header" href="#43-тестовые-регистры">4.3. Тестовые регистры</a></h1>
+<p>Тестовые регистры отображены в адресное пространство контроллера и доступны
+по шине APB. Их адреса приведены в таблице.</p>
+<h2 id="карта-тестовых-регистров"><a class="header" href="#карта-тестовых-регистров">Карта тестовых регистров</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Адрес</th><th>Тип</th><th>Ширина</th><th>Сброс</th><th>Имя</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>base + 0x080</code></td><td>RW</td><td>3</td><td><code>0x00000000</code></td><td><code>RTCITCR</code></td><td>Управление интеграционным тестом</td></tr>
+<tr><td><code>base + 0x084</code></td><td>RW</td><td>0</td><td><code>0x00000000</code></td><td><code>RTCITIP</code></td><td>Чтение или установка входов</td></tr>
+<tr><td><code>base + 0x088</code></td><td>RW</td><td>1</td><td><code>0x00000000</code></td><td><code>RTCITOP</code></td><td>Чтение или установка выходов</td></tr>
+<tr><td><code>base + 0x08C</code></td><td>RW</td><td>32</td><td><code>0x00000000</code></td><td><code>RTCTOFFSET</code></td><td>Тестовое смещение</td></tr>
+<tr><td><code>base + 0x090</code></td><td>RW</td><td>32</td><td><code>0x00000000</code></td><td><code>RTCTCOUNT</code></td><td>Тестовое значение счётчика</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="предупреждение-1"><a class="header" href="#предупреждение-1">Предупреждение</a></h2>
+<p>К тестовым регистрам нельзя обращаться во время нормальной работы.
+Запись в них переводит внутреннюю логику в тестовый режим и нарушает
+функционирование счётчика и прерываний.</p>
+<h2 id="431-регистр-управления-интеграционным-тестом-rtcitcr"><a class="header" href="#431-регистр-управления-интеграционным-тестом-rtcitcr">4.3.1. Регистр управления интеграционным тестом RTCITCR</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x080</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>3 бита</td></tr>
+<tr><td>Сброс</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Регистр управляет тестовым режимом контроллера. Младший бит включает
+интеграционное тестирование: пока он равен единице, входы и выходы блоков
+управляются через регистры <code>RTCITIP</code> и <code>RTCITOP</code>, а не штатной логикой.
+Остальные биты относятся к выбору тестового режима и в типовом
+использовании остаются нулевыми.</p>
+<p>После завершения тестирования регистр должен быть сброшен в ноль.</p>
+<h2 id="432-регистр-входов-rtcitip"><a class="header" href="#432-регистр-входов-rtcitip">4.3.2. Регистр входов RTCITIP</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x084</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>0 бит</td></tr>
+<tr><td>Сброс</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Регистр предназначен для чтения и установки значений внутренних входов
+блоков. Ширина «0 бит» означает, что в данной реализации у контроллера нет
+внутрикристальных входов, которыми можно управлять через тестовую обвязку:
+все внешние сигналы приходят от шины APB, генератора тактов и контроллера
+сброса (см. раздел 4.4).</p>
+<p>Регистр сохранён в карте адресов для совместимости с общей схемой тестовой
+обвязки PrimeCell.</p>
+<h2 id="433-регистр-выходов-rtcitop"><a class="header" href="#433-регистр-выходов-rtcitop">4.3.3. Регистр выходов RTCITOP</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x088</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>1 бит</td></tr>
+<tr><td>Сброс</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Регистр позволяет читать состояние тестируемого выхода и, в тестовом
+режиме, задавать его значение. Единственный значащий бит соответствует
+выходу <code>RTCINTR</code> — единственному функциональному выходу контроллера,
+доступному для интеграционного тестирования.</p>
+<h2 id="434-регистр-тестового-смещения-rtctoffset"><a class="header" href="#434-регистр-тестового-смещения-rtctoffset">4.3.4. Регистр тестового смещения RTCTOFFSET</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x08C</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>32 бита</td></tr>
+<tr><td>Сброс</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Регистр задаёт смещение, добавляемое к значению счётчика в тестовом режиме.
+Он позволяет сдвинуть показания часов на произвольную величину, не выполняя
+загрузку через <code>RTCLR</code>, и тем самым проверить логику сравнения и обработки
+прерывания.</p>
+<p>Регистр сохраняет значение при сбросе шины <code>PRESETn</code> и сбрасывается только
+сигналом <code>nPOR</code>.</p>
+<h2 id="435-регистр-тестового-счётчика-rtctcount"><a class="header" href="#435-регистр-тестового-счётчика-rtctcount">4.3.5. Регистр тестового счётчика RTCTCOUNT</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Параметр</th><th>Значение</th></tr>
+</thead>
+<tbody>
+<tr><td>Смещение</td><td><code>0x090</code></td></tr>
+<tr><td>Тип</td><td>RW</td></tr>
+<tr><td>Ширина</td><td>32 бита</td></tr>
+<tr><td>Сброс</td><td><code>0x00000000</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Регистр даёт прямой доступ к значению счётчика в тестовом режиме. Через
+него можно прочитать текущее значение, не дожидаясь синхронизации с доменом
+<code>PCLK</code>, и записать новое — что позволяет быстро пройти по всему диапазону
+значений и проверить переполнение.</p>
+<p>Как и <code>RTCTOFFSET</code>, регистр сохраняет значение при сбросе шины и
+сбрасывается сигналом <code>nPOR</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="44-интеграционное-тестирование-входов"><a class="header" href="#44-интеграционное-тестирование-входов">4.4. Интеграционное тестирование входов</a></h1>
+<p>У контроллера PL031 нет внутрикристальных входов и входов блоков, которые
+можно было бы возбуждать через тестовую обвязку.</p>
+<h2 id="что-это-означает"><a class="header" href="#что-это-означает">Что это означает</a></h2>
+<p>Все внешние сигналы контроллера относятся к одной из трёх категорий:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Категория</th><th>Сигналы</th><th>Способ проверки</th></tr>
+</thead>
+<tbody>
+<tr><td>Шина APB</td><td><code>PSEL</code>, <code>PENABLE</code>, <code>PWRITE</code>, <code>PADDR</code>, <code>PWDATA</code>, <code>PRDATA</code></td><td>Обычные операции чтения и записи</td></tr>
+<tr><td>Сброс</td><td><code>PRESETn</code>, <code>nRTCRST</code>, <code>nPOR</code></td><td>Проверяются на уровне системы</td></tr>
+<tr><td>Тактирование</td><td><code>PCLK</code>, <code>CLK1HZ</code></td><td>Проверяются на уровне системы</td></tr>
+</tbody>
+</table>
+</div>
+<p>Поскольку отдельных входов у блоков нет, регистр <code>RTCITIP</code> имеет нулевую
+ширину и фактически не используется. Это отражено в карте тестовых
+регистров (раздел 4.3).</p>
+<h2 id="практическое-следствие-1"><a class="header" href="#практическое-следствие-1">Практическое следствие</a></h2>
+<p>Интеграционное тестирование входов сводится к проверке шины APB: любое
+обращение к регистру одновременно проверяет адресную линию, линии данных,
+управляющие сигналы и логику выбора устройства. Именно поэтому в таблице
+итоговой стратегии (раздел 4.6) для всех сигналов APB указан один и тот же
+метод — «чтение/запись регистров».</p>
+<h2 id="почему-так-сделано"><a class="header" href="#почему-так-сделано">Почему так сделано</a></h2>
+<p>Контроллер RTC не имеет собственных входов, кроме перечисленных. Всё, что
+могло бы быть входом блока, выведено на шину или приходит от системы.
+Тестовая обвязка, таким образом, нужна в основном для наблюдения выходов
+и для ускорения проверки медленных цепей счётчика.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="45-интеграционное-тестирование-выходов"><a class="header" href="#45-интеграционное-тестирование-выходов">4.5. Интеграционное тестирование выходов</a></h1>
+<p>В отличие от входов, выходы у контроллера есть, и их можно проверять через
+тестовую обвязку.</p>
+<h2 id="общая-схема"><a class="header" href="#общая-схема">Общая схема</a></h2>
+<p>Тестирование выходов выполняется в два шага:</p>
+<ol>
+<li>В тестовом режиме нужному выходу присваивается значение через регистр
+<code>RTCITOP</code>.</li>
+<li>Значение читается обратно через тот же регистр и сравнивается
+с ожидаемым.</li>
+</ol>
+<p>Так проверяется целостность пути от внутренней логики до вывода контроллера,
+включая мультиплексор тестового режима.</p>
+<h2 id="451-внутрикристальные-выходы"><a class="header" href="#451-внутрикристальные-выходы">4.5.1. Внутрикристальные выходы</a></h2>
+<p>Единственный функциональный выход контроллера — <code>RTCINTR</code>, сигнал запроса
+прерывания. Он и является предметом интеграционного тестирования.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Выход</th><th>Источник</th><th>Регистр</th><th>Проверка</th></tr>
+</thead>
+<tbody>
+<tr><td><code>RTCINTR</code></td><td>Блок обновления</td><td><code>RTCITOP[0]</code></td><td>Установка и чтение значения</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="порядок-проверки"><a class="header" href="#порядок-проверки">Порядок проверки</a></h3>
+<pre><code class="language-text">  1. Включить тестовый режим:      RTCITCR = 1
+  2. Задать значение выхода:       RTCITOP = 1
+  3. Прочитать значение:           RTCITOP  → ожидается 1
+  4. Задать противоположное:       RTCITOP = 0
+  5. Прочитать значение:           RTCITOP  → ожидается 0
+  6. Выключить тестовый режим:     RTCITCR = 0
+</code></pre>
+<h2 id="что-не-проверяется-этим-способом"><a class="header" href="#что-не-проверяется-этим-способом">Что не проверяется этим способом</a></h2>
+<ul>
+<li><strong>Сброс.</strong> Сигналы <code>PRESETn</code>, <code>nRTCRST</code>, <code>nPOR</code> подаются от контроллера
+сброса; их влияние проверяется функционально, а не через <code>RTCITOP</code>.</li>
+<li><strong>Тактирование.</strong> <code>CLK1HZ</code> и <code>PCLK</code> приходят от генераторов; корректность
+их частоты проверяется на уровне системы.</li>
+<li><strong>Scan-выводы.</strong> Они относятся к отдельному механизму тестирования
+(см. раздел 4.2) и не входят в интеграционную обвязку.</li>
+</ul>
+<h2 id="ограничение"><a class="header" href="#ограничение">Ограничение</a></h2>
+<p>Тестовая обвязка проверяет только электрическую целостность пути сигнала
+и работу мультиплексора. Она не проверяет функциональную логику
+формирования прерывания — для этого используется штатный режим: загрузка
+значений в <code>RTCLR</code> и <code>RTCMR</code> и наблюдение за <code>RTCMIS</code>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="46-итоги-интеграционного-тестирования"><a class="header" href="#46-итоги-интеграционного-тестирования">4.6. Итоги интеграционного тестирования</a></h1>
+<p>В таблице сведена стратегия тестирования всех выводов контроллера.</p>
+<h2 id="таблица-стратегии"><a class="header" href="#таблица-стратегии">Таблица стратегии</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Сигнал</th><th>Тип</th><th>Источник / приёмник</th><th>Метод тестирования</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PRESETn</code></td><td>вход</td><td>Контроллер сброса</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>PADDR</code></td><td>вход</td><td>APB</td><td>Чтение и запись регистров</td></tr>
+<tr><td><code>PCLK</code></td><td>вход</td><td>APB</td><td>Чтение и запись регистров</td></tr>
+<tr><td><code>PENABLE</code></td><td>вход</td><td>APB</td><td>Чтение и запись регистров</td></tr>
+<tr><td><code>PRDATA</code></td><td>выход</td><td>APB</td><td>Чтение и запись регистров</td></tr>
+<tr><td><code>PSEL</code></td><td>вход</td><td>APB</td><td>Чтение и запись регистров</td></tr>
+<tr><td><code>PWDATA</code></td><td>вход</td><td>APB</td><td>Чтение и запись регистров</td></tr>
+<tr><td><code>PWRITE</code></td><td>вход</td><td>APB</td><td>Чтение и запись регистров</td></tr>
+<tr><td><code>CLK1HZ</code></td><td>вход</td><td>Генератор тактов</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>nRTCRST</code></td><td>вход</td><td>Контроллер сброса</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>nPOR</code></td><td>вход</td><td>Контроллер сброса</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>RTCINTR</code></td><td>выход</td><td>Контроллер прерываний</td><td>Проверяется через регистр <code>RTCITOP</code></td></tr>
+<tr><td><code>SCANENABLE</code></td><td>вход</td><td>Тест-контроллер</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>SCANINPCLK</code></td><td>вход</td><td>Тест-контроллер</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>SCANINCLK1HZ</code></td><td>вход</td><td>Тест-контроллер</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>SCANOUTPCLK</code></td><td>выход</td><td>Тест-контроллер</td><td>Не проверяется интеграционными векторами</td></tr>
+<tr><td><code>SCANOUTCLK1HZ</code></td><td>выход</td><td>Тест-контроллер</td><td>Не проверяется интеграционными векторами</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="выводы"><a class="header" href="#выводы">Выводы</a></h2>
+<ul>
+<li>Большинство сигналов проверяется косвенно: любая операция чтения или
+записи по APB одновременно проверяет адресные линии, данные и управление.</li>
+<li>Единственный выход, доступный для прямой проверки через тестовую обвязку,
+— <code>RTCINTR</code>.</li>
+<li>Сигналы сброса и тактирования относятся к системе и проверяются
+на уровне платформы, а не контроллера.</li>
+<li>Scan-выводы обслуживаются отдельным механизмом и в интеграционные
+тестовые векторы не входят.</li>
+</ul>
+<h2 id="полный-цикл-проверки"><a class="header" href="#полный-цикл-проверки">Полный цикл проверки</a></h2>
+<p>Разумный порядок проверки контроллера при интеграции:</p>
+<ol>
+<li><strong>Сброс и идентификация.</strong> Снять сброс, прочитать <code>RTCPCellID0-3</code>
+и <code>RTCPeriphID0-3</code>, сравнить с ожидаемыми значениями.</li>
+<li><strong>Шина.</strong> Выполнить запись и чтение <code>RTCMR</code>, убедиться в корректности
+обмена.</li>
+<li><strong>Счётчик.</strong> Записать значение в <code>RTCLR</code>, прочитать <code>RTCDR</code>
+и убедиться, что оно совпадает (с учётом задержки синхронизации).</li>
+<li><strong>Прерывание.</strong> Запрограммировать <code>RTCMR</code> на значение, которое будет
+достигнуто в ближайшие секунды, разрешить прерывание и убедиться
+в появлении <code>RTCINTR</code> и установке <code>RTCMIS[0]</code>.</li>
+<li><strong>Сброс флага.</strong> Записать <code>RTCICR</code>, убедиться, что <code>RTCINTR</code> снят.</li>
+<li><strong>Тестовая обвязка.</strong> Проверить выход <code>RTCINTR</code> через <code>RTCITOP</code>
+и вернуть контроллер в штатный режим.</li>
+</ol>
+<p>Такой порядок позволяет локализовать неисправность: если идентификация
+проходит, а счётчик не работает, проблема в домене <code>CLK1HZ</code> или в подаче
+<code>CLK1HZ</code>, а не в шине.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="приложение-a-описание-сигналов"><a class="header" href="#приложение-a-описание-сигналов">Приложение A. Описание сигналов</a></h1>
+<p>В приложении перечислены все сигналы контроллера: сигналы шины AMBA APB
+и внутрикристальные сигналы, не относящиеся к шине.</p>
+<h2 id="a1-сигналы-amba-apb"><a class="header" href="#a1-сигналы-amba-apb">A.1. Сигналы AMBA APB</a></h2>
+<p>Контроллер подключён к шине AMBA APB как ведомое устройство.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Сигнал</th><th>Тип</th><th>Источник / приёмник</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PCLK</code></td><td>вход</td><td>Генератор тактов</td><td>Тактовый сигнал APB; синхронизирует все передачи по шине</td></tr>
+<tr><td><code>PRESETn</code></td><td>вход</td><td>Контроллер сброса</td><td>Сброс шины, активен низким уровнем</td></tr>
+<tr><td><code>PSEL</code></td><td>вход</td><td>Мост APB</td><td>Высокий уровень означает, что контроллер выбран мостом APB</td></tr>
+<tr><td><code>PENABLE</code></td><td>вход</td><td>Мост APB</td><td>Разрешение передачи; удерживается высоким в течение одного такта <code>PCLK</code></td></tr>
+<tr><td><code>PWRITE</code></td><td>вход</td><td>Мост APB</td><td>1 — запись, 0 — чтение; синхронен с адресом</td></tr>
+<tr><td><code>PADDR[11:2]</code></td><td>вход</td><td>Мост APB</td><td>Часть адресной шины APB; задаёт слово внутри блока</td></tr>
+<tr><td><code>PWDATA[31:0]</code></td><td>вход</td><td>Мост APB</td><td>Однонаправленная шина данных записи</td></tr>
+<tr><td><code>PRDATA[31:0]</code></td><td>выход</td><td>Мост APB</td><td>Однонаправленная шина данных чтения</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="замечания"><a class="header" href="#замечания">Замечания</a></h3>
+<ul>
+<li>Адрес передаётся только битами <code>[11:2]</code>: младшие два бита не нужны,
+так как все регистры выровнены по границе 32-битного слова.</li>
+<li>Диапазон <code>PADDR[11:2]</code> покрывает 4 КБ адресного пространства, чего
+достаточно для всех регистров контроллера.</li>
+<li>Сигналы <code>PSEL</code> и <code>PENABLE</code> должны быть активны одновременно, чтобы
+передача состоялась.</li>
+</ul>
+<h2 id="a2-внутрикристальные-сигналы"><a class="header" href="#a2-внутрикристальные-сигналы">A.2. Внутрикристальные сигналы</a></h2>
+<p>В таблице приведены сигналы, не относящиеся к шине.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Сигнал</th><th>Тип</th><th>Источник / приёмник</th><th>Назначение</th></tr>
+</thead>
+<tbody>
+<tr><td><code>CLK1HZ</code></td><td>вход</td><td>Генератор тактов</td><td>Тактовый сигнал 1 Гц; именно он увеличивает счётчик в штатном режиме</td></tr>
+<tr><td><code>nRTCRST</code></td><td>вход</td><td>Контроллер сброса</td><td>Сброс ядра RTC, активен низким уровнем. Может подаваться асинхронно, но сниматься должен синхронно с <code>CLK1HZ</code></td></tr>
+<tr><td><code>nPOR</code></td><td>вход</td><td>Контроллер сброса</td><td>Сброс по включению питания для <code>RTCMR</code> и регистров смещения. Эти регистры должны сохранять значение при сбросе шины <code>PRESETn</code></td></tr>
+<tr><td><code>RTCINTR</code></td><td>выход</td><td>Контроллер прерываний</td><td>Запрос прерывания. Высокий уровень означает, что произошло совпадение счётчика с регистром <code>RTCMR</code></td></tr>
+<tr><td><code>SCANENABLE</code></td><td>вход</td><td>Тест-контроллер</td><td>Зарезервирован под сигнал разрешения scan-режима</td></tr>
+<tr><td><code>SCANINPCLK</code></td><td>вход</td><td>Тест-контроллер</td><td>Зарезервирован под вход данных scan-цепочки домена <code>PCLK</code></td></tr>
+<tr><td><code>SCANOUTPCLK</code></td><td>—</td><td>Тест-контроллер</td><td>Зарезервирован под выход данных scan-цепочки домена <code>PCLK</code></td></tr>
+<tr><td><code>SCANINCLK1HZ</code></td><td>вход</td><td>Тест-контроллер</td><td>Зарезервирован под вход данных scan-цепочки домена <code>CLK1HZ</code></td></tr>
+<tr><td><code>SCANOUTCLK1HZ</code></td><td>—</td><td>Тест-контроллер</td><td>Зарезервирован под выход данных scan-цепочки домена <code>CLK1HZ</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="замечания-1"><a class="header" href="#замечания-1">Замечания</a></h3>
+<ul>
+<li>Сигналы <code>SCAN*</code> в текущей ревизии являются зарезервированными
+(place holder) и не описаны как функциональные. Направление сигналов
+<code>SCANOUT*</code> при интеграции определяется схемой тест-контроллера.</li>
+<li><code>nRTCRST</code> и <code>nPOR</code> — разные сигналы: первый сбрасывает ядро счёта,
+второй — регистры, переживающие сброс шины. Объединение допустимо,
+если сохранение будильника не требуется.</li>
+<li><code>RTCINTR</code> имеет единственный источник — блок обновления; прерывание
+снимается записью в <code>RTCICR</code>.</li>
+</ul>
+<h2 id="сводка-по-доменам-тактирования"><a class="header" href="#сводка-по-доменам-тактирования">Сводка по доменам тактирования</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Домен</th><th>Сигналы</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PCLK</code></td><td><code>PCLK</code>, <code>PRESETn</code>, <code>PSEL</code>, <code>PENABLE</code>, <code>PWRITE</code>, <code>PADDR</code>, <code>PWDATA</code>, <code>PRDATA</code>, <code>RTCITCR</code>, <code>RTCITIP</code>, <code>RTCITOP</code></td></tr>
+<tr><td><code>CLK1HZ</code></td><td><code>CLK1HZ</code>, <code>nRTCRST</code>, счётчик, логика сравнения</td></tr>
+</tbody>
+</table>
+</div>
+<p>Регистры <code>RTCMR</code>, <code>RTCLR</code>, <code>RTCCR</code>, <code>RTCIMSC</code> доступны из домена <code>PCLK</code>,
+но их значения применяются в домене <code>CLK1HZ</code> через блок синхронизации.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="приложение-б-глоссарий"><a class="header" href="#приложение-б-глоссарий">Приложение Б. Глоссарий</a></h1>
+<p><strong>AMBA</strong> (Advanced Microcontroller Bus Architecture) — семейство шин
+и протоколов, разработанных ARM для соединения блоков внутри системы
+на кристалле.</p>
+<p><strong>APB</strong> (Advanced Peripheral Bus) — простая шина в составе AMBA,
+предназначенная для медленной периферии. Характеризуется низким
+энергопотреблением и простотой протокола; обмен выполняется за две фазы.</p>
+<p><strong>ATPG</strong> (Automatic Test Pattern Generation) — автоматическая генерация
+тестовых воздействий для проверки цифровых схем.</p>
+<p><strong>DNM</strong> (Do Not Modify) — пометка зарезервированного поля регистра:
+значение поля нельзя изменять при записи.</p>
+<p><strong>IMSC</strong> (Interrupt Mask Set/Clear) — регистр маски прерывания. В компонентах
+PrimeCell единица в бите разрешает прерывание, ноль — маскирует.</p>
+<p><strong>ISR</strong> (Interrupt Service Routine) — подпрограмма обработки прерывания.</p>
+<p><strong>JEP106</strong> — стандарт, описывающий коды производителей интегральных схем;
+используется в регистрах идентификации периферии.</p>
+<p><strong>PCLK</strong> — тактовый сигнал шины APB.</p>
+<p><strong>PrimeCell</strong> — семейство готовых периферийных блоков ARM, предназначенных
+для интеграции в систему на кристалле. Компоненты PrimeCell имеют
+стандартные регистры идентификации.</p>
+<p><strong>RTC</strong> (Real-Time Clock) — часы реального времени: устройство, отсчитывающее
+время независимо от работы процессора.</p>
+<p><strong>Scan-тестирование</strong> — метод производственного тестирования, при котором
+внутренние триггеры схемы соединяются в цепочки, позволяющие сдвигать
+в них произвольные значения.</p>
+<p><strong>SoC</strong> (System on Chip) — система на кристалле: интегральная схема,
+объединяющая процессор, память и периферию.</p>
+<p><strong>Будильник</strong> — в контексте этой книги: механизм сравнения значения счётчика
+с регистром <code>RTCMR</code>, вырабатывающий прерывание при совпадении.</p>
+<p><strong>Домен тактирования</strong> — часть схемы, работающая от одного тактового сигнала.
+Контроллер использует два домена: <code>PCLK</code> и <code>CLK1HZ</code>.</p>
+<p><strong>Маска прерывания</strong> — механизм, позволяющий запретить выдачу прерывания,
+не сбрасывая при этом флаг события.</p>
+<p><strong>Переполнение</strong> — переход счётчика из максимального значения в ноль.
+Для 32-битного счётчика происходит раз в 2³² шагов.</p>
+<p><strong>Регистр</strong> — адресуемая ячейка хранения внутри периферийного устройства.</p>
+<p><strong>Сброс</strong> — приведение устройства в исходное состояние. В контроллере
+различаются сброс шины (<code>PRESETn</code>), сброс ядра (<code>nRTCRST</code>) и сброс
+по питанию (<code>nPOR</code>).</p>
+<p><strong>Сырой статус</strong> — состояние флага прерывания до применения маски.</p>
+<p><strong>Эпоха</strong> — начальная точка отсчёта времени. Контроллер хранит просто число
+секунд; выбор эпохи (например, 1 января 1970 года) — задача программного
+обеспечения.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
